@@ -1,29 +1,20 @@
-package nextstep.subway.station.domain;
+package nextstep.subway.station.domain
 
-import nextstep.subway.common.BaseEntity;
-
-import javax.persistence.*;
+import nextstep.subway.common.BaseEntity
+import javax.persistence.*
 
 @Entity
-public class Station extends BaseEntity {
+class Station : BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    val id: Long? = null
+
     @Column(unique = true)
-    private String name;
+    var name: String? = null
+        private set
 
-    public Station() {
-    }
-
-    public Station(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+    constructor() {}
+    constructor(name: String?) {
+        this.name = name
     }
 }

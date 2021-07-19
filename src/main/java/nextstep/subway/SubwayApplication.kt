@@ -1,17 +1,16 @@
-package nextstep.subway;
+package nextstep.subway
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import kotlin.jvm.JvmStatic
+import org.springframework.boot.SpringApplication
 
 @EnableJpaRepositories
 @EnableJpaAuditing
 @SpringBootApplication
-public class SubwayApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(SubwayApplication.class, args);
+class SubwayApplication {
+    fun main(args: Array<String>) {
+        SpringApplication.run(SubwayApplication::class.java, *args)
     }
-
 }

@@ -1,14 +1,14 @@
-package nextstep.subway.line;
+package nextstep.subway.line
 
-import nextstep.subway.AcceptanceTest;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import nextstep.subway.AcceptanceTest
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 
 @DisplayName("지하철 노선 관련 기능")
-public class LineAcceptanceTest extends AcceptanceTest {
+class LineAcceptanceTest : AcceptanceTest() {
     @DisplayName("지하철 노선을 생성한다.")
     @Test
-    void createLine() {
+    fun createLine() {
         // when
         // 지하철_노선_생성_요청
 
@@ -18,7 +18,7 @@ public class LineAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("기존에 존재하는 지하철 노선 이름으로 지하철 노선을 생성한다.")
     @Test
-    void createLine2() {
+    fun createLine2() {
         // given
         // 지하철_노선_등록되어_있음
 
@@ -28,38 +28,56 @@ public class LineAcceptanceTest extends AcceptanceTest {
         // then
         // 지하철_노선_생성_실패됨
     }
+    // given
+    // 지하철_노선_등록되어_있음
+    // 지하철_노선_등록되어_있음
 
-    @DisplayName("지하철 노선 목록을 조회한다.")
-    @Test
-    void getLines() {
-        // given
-        // 지하철_노선_등록되어_있음
-        // 지하철_노선_등록되어_있음
+    // when
+    // 지하철_노선_목록_조회_요청
 
-        // when
-        // 지하철_노선_목록_조회_요청
+    // then
+    // 지하철_노선_목록_응답됨
+    // 지하철_노선_목록_포함됨
+    @get:Test
+    @get:DisplayName("지하철 노선 목록을 조회한다.")
+    val lines: Unit
+        get() {
+            // given
+            // 지하철_노선_등록되어_있음
+            // 지하철_노선_등록되어_있음
 
-        // then
-        // 지하철_노선_목록_응답됨
-        // 지하철_노선_목록_포함됨
-    }
+            // when
+            // 지하철_노선_목록_조회_요청
 
-    @DisplayName("지하철 노선을 조회한다.")
-    @Test
-    void getLine() {
-        // given
-        // 지하철_노선_등록되어_있음
+            // then
+            // 지하철_노선_목록_응답됨
+            // 지하철_노선_목록_포함됨
+        }
+    // given
+    // 지하철_노선_등록되어_있음
 
-        // when
-        // 지하철_노선_조회_요청
+    // when
+    // 지하철_노선_조회_요청
 
-        // then
-        // 지하철_노선_응답됨
-    }
+    // then
+    // 지하철_노선_응답됨
+    @get:Test
+    @get:DisplayName("지하철 노선을 조회한다.")
+    val line: Unit
+        get() {
+            // given
+            // 지하철_노선_등록되어_있음
+
+            // when
+            // 지하철_노선_조회_요청
+
+            // then
+            // 지하철_노선_응답됨
+        }
 
     @DisplayName("지하철 노선을 수정한다.")
     @Test
-    void updateLine() {
+    fun updateLine() {
         // given
         // 지하철_노선_등록되어_있음
 
@@ -72,7 +90,7 @@ public class LineAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("지하철 노선을 제거한다.")
     @Test
-    void deleteLine() {
+    fun deleteLine() {
         // given
         // 지하철_노선_등록되어_있음
 

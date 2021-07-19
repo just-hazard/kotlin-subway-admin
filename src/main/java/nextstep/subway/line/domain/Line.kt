@@ -1,40 +1,28 @@
-package nextstep.subway.line.domain;
+package nextstep.subway.line.domain
 
-import nextstep.subway.common.BaseEntity;
-
-import javax.persistence.*;
+import nextstep.subway.common.BaseEntity
+import javax.persistence.*
 
 @Entity
-public class Line extends BaseEntity {
+class Line : BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    val id: Long? = null
+
     @Column(unique = true)
-    private String name;
-    private String color;
+    var name: String? = null
+        private set
+    var color: String? = null
+        private set
 
-    public Line() {
+    constructor() {}
+    constructor(name: String?, color: String?) {
+        this.name = name
+        this.color = color
     }
 
-    public Line(String name, String color) {
-        this.name = name;
-        this.color = color;
-    }
-
-    public void update(Line line) {
-        this.name = line.getName();
-        this.color = line.getColor();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getColor() {
-        return color;
+    fun update(line: Line) {
+        name = line.name
+        color = line.color
     }
 }

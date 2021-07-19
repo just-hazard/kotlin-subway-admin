@@ -1,27 +1,18 @@
-package nextstep.subway.common;
+package nextstep.subway.common
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import javax.persistence.EntityListeners
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import org.springframework.data.annotation.CreatedDate
+import java.time.LocalDateTime
+import org.springframework.data.annotation.LastModifiedDate
+import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public class BaseEntity {
+@EntityListeners(AuditingEntityListener::class)
+open class BaseEntity {
     @CreatedDate
-    private LocalDateTime createdDate;
+    val createdDate: LocalDateTime? = null
 
     @LastModifiedDate
-    private LocalDateTime modifiedDate;
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public LocalDateTime getModifiedDate() {
-        return modifiedDate;
-    }
+    val modifiedDate: LocalDateTime? = null
 }

@@ -1,48 +1,32 @@
-package nextstep.subway.line.dto;
+package nextstep.subway.line.dto
 
-import nextstep.subway.line.domain.Line;
+import nextstep.subway.line.domain.Line
+import java.time.LocalDateTime
 
-import java.time.LocalDateTime;
+class LineResponse {
+    var id: Long? = null
+        private set
+    var name: String? = null
+        private set
+    var color: String? = null
+        private set
+    var createdDate: LocalDateTime? = null
+        private set
+    var modifiedDate: LocalDateTime? = null
+        private set
 
-public class LineResponse {
-    private Long id;
-    private String name;
-    private String color;
-    private LocalDateTime createdDate;
-    private LocalDateTime modifiedDate;
-
-    public LineResponse() {
+    constructor() {}
+    constructor(id: Long?, name: String?, color: String?, createdDate: LocalDateTime?, modifiedDate: LocalDateTime?) {
+        this.id = id
+        this.name = name
+        this.color = color
+        this.createdDate = createdDate
+        this.modifiedDate = modifiedDate
     }
 
-    public LineResponse(Long id, String name, String color, LocalDateTime createdDate, LocalDateTime modifiedDate) {
-        this.id = id;
-        this.name = name;
-        this.color = color;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-    }
-
-    public static LineResponse of(Line line) {
-        return new LineResponse(line.getId(), line.getName(), line.getColor(), line.getCreatedDate(), line.getModifiedDate());
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public LocalDateTime getModifiedDate() {
-        return modifiedDate;
+    companion object {
+        fun of(line: Line): LineResponse {
+            return LineResponse(line.id, line.name, line.color, line.createdDate, line.modifiedDate)
+        }
     }
 }

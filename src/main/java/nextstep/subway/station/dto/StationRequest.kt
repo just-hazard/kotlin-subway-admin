@@ -1,15 +1,10 @@
-package nextstep.subway.station.dto;
+package nextstep.subway.station.dto
 
-import nextstep.subway.station.domain.Station;
+import nextstep.subway.station.domain.Station
 
-public class StationRequest {
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public Station toStation() {
-        return new Station(name);
+class StationRequest {
+    val name: String? = null
+    fun toStation(): Station {
+        return Station(name)
     }
 }

@@ -1,9 +1,30 @@
+buildscript {
+	ext {
+		kotlinVersion = '1.5.21'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin")
+		classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-allopen:${kotlinVersion}")
+		classpath("org.jetbrains.kotlin:kotlin-noarg:${kotlinVersion}")
+		classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.4.0-SNAPSHOT'
 	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 	id 'java'
 	id 'org.jetbrains.kotlin.jvm' version '1.5.21'
 }
+
+apply plugin: 'kotlin'
+apply plugin: 'kotlin-spring'
+apply plugin: 'kotlin-jpa'
+apply plugin: 'kotlin-kapt'
 
 group = 'nextstep'
 version = '0.0.1-SNAPSHOT'
