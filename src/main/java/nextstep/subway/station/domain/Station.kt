@@ -4,17 +4,13 @@ import nextstep.subway.common.BaseEntity
 import javax.persistence.*
 
 @Entity
-class Station : BaseEntity {
+class Station (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
+    val id: Long = 0,
 
     @Column(unique = true)
-    var name: String? = null
-        private set
-
-    constructor() {}
-    constructor(name: String?) {
-        this.name = name
+    var name: String
+    ) : BaseEntity() {
+        constructor(name: String) : this(0, name)
     }
-}

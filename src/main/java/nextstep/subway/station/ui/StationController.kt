@@ -12,8 +12,8 @@ import java.net.URI
 @RestController
 class StationController(private val stationService: StationService) {
     @PostMapping("/stations")
-    fun createStation(@RequestBody stationRequest: StationRequest?): ResponseEntity<StationResponse> {
-        val station = stationService.saveStation(stationRequest!!)
+    fun createStation(@RequestBody stationRequest: StationRequest): ResponseEntity<StationResponse> {
+        val station = stationService.saveStation(stationRequest)
         return ResponseEntity.created(URI.create("/stations/" + station.id)).body(station)
     }
 

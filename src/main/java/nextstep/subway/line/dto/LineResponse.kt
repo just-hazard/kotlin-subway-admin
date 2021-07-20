@@ -3,26 +3,13 @@ package nextstep.subway.line.dto
 import nextstep.subway.line.domain.Line
 import java.time.LocalDateTime
 
-class LineResponse {
-    var id: Long? = null
-        private set
-    var name: String? = null
-        private set
-    var color: String? = null
-        private set
-    var createdDate: LocalDateTime? = null
-        private set
-    var modifiedDate: LocalDateTime? = null
-        private set
-
-    constructor() {}
-    constructor(id: Long?, name: String?, color: String?, createdDate: LocalDateTime?, modifiedDate: LocalDateTime?) {
-        this.id = id
-        this.name = name
-        this.color = color
-        this.createdDate = createdDate
-        this.modifiedDate = modifiedDate
-    }
+class LineResponse(
+    val id: Long,
+    val name: String,
+    val color: String,
+    val createdDate: LocalDateTime,
+    val modifiedDate: LocalDateTime
+) {
 
     companion object {
         fun of(line: Line): LineResponse {

@@ -4,19 +4,16 @@ import nextstep.subway.common.BaseEntity
 import javax.persistence.*
 
 @Entity
-class Line : BaseEntity {
+class Line(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null
-
+    val id: Long = 0,
     @Column(unique = true)
-    var name: String? = null
-        private set
-    var color: String? = null
-        private set
+    var name: String,
+    var color: String
+) : BaseEntity() {
 
-    constructor() {}
-    constructor(name: String?, color: String?) {
+    constructor(name: String, color: String): this(0,name, color) {
         this.name = name
         this.color = color
     }

@@ -2,6 +2,7 @@ package nextstep.subway.line.ui
 
 import nextstep.subway.line.application.LineService
 import nextstep.subway.line.dto.LineRequest
+import nextstep.subway.line.dto.LineResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -13,8 +14,8 @@ import java.net.URI
 @RequestMapping("/lines")
 class LineController(private val lineService: LineService) {
     @PostMapping
-    fun createLine(@RequestBody lineRequest: LineRequest?): ResponseEntity<*> {
-        val line = lineService.saveLine(lineRequest!!)
+    fun createLine(@RequestBody lineRequest: LineRequest): ResponseEntity<LineResponse> {
+        val line = lineService.saveLine(lineRequest)
         return ResponseEntity.created(URI.create("/lines/" + line.id)).body(line)
     }
 }

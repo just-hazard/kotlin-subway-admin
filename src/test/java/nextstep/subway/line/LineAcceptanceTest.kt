@@ -1,19 +1,42 @@
 package nextstep.subway.line
 
+import io.restassured.RestAssured
+import io.restassured.response.ExtractableResponse
+import io.restassured.response.Response
 import nextstep.subway.AcceptanceTest
+import nextstep.subway.line.dto.LineRequest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 
 @DisplayName("지하철 노선 관련 기능")
 class LineAcceptanceTest : AcceptanceTest() {
     @DisplayName("지하철 노선을 생성한다.")
     @Test
     fun createLine() {
+        // given
+        val 이호선 = LineRequest("2호선","초록색")
+
         // when
         // 지하철_노선_생성_요청
+        val response: ExtractableResponse<Response> = RestAssured
+            .given().log().all()
+            .body(이호선)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .`when`()
+            .post("/lines")
+            .then().log().all().extract()
 
         // then
         // 지하철_노선_생성됨
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
+        assertThat(response.header("Content-Type")).isEqualTo(MediaType.APPLICATION_JSON_VALUE)
+        assertThat(response.body().jsonPath().getString("color")).isEqualTo("초록색")
+        assertThat(response.body().jsonPath().getString("name")).isEqualTo("2호선")
+        assertThat(response.jsonPath().getString("createdDate")).isNotNull
+        assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
     }
 
     @DisplayName("기존에 존재하는 지하철 노선 이름으로 지하철 노선을 생성한다.")
