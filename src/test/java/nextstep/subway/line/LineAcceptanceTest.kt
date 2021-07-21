@@ -21,22 +21,12 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // when
         // 지하철_노선_생성_요청
-        val response: ExtractableResponse<Response> = RestAssured
-            .given().log().all()
-            .body(이호선)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .post("/lines")
-            .then().log().all().extract()
+        val response: ExtractableResponse<Response> = 노선_생성_요청(이호선)
 
         // then
         // 지하철_노선_생성됨
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
-        assertThat(response.header("Content-Type")).isEqualTo(MediaType.APPLICATION_JSON_VALUE)
-        assertThat(response.body().jsonPath().getString("color")).isEqualTo("초록색")
-        assertThat(response.body().jsonPath().getString("name")).isEqualTo("2호선")
-        assertThat(response.jsonPath().getString("createdDate")).isNotNull
-        assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
+        Http코드값_미디어타입_확인(response, HttpStatus.CREATED.value(),MediaType.APPLICATION_JSON_VALUE)
+        노선_데이터_확인(response,"초록색","2호선")
     }
 
     @DisplayName("기존에 존재하는 지하철 노선 이름으로 지하철 노선을 생성한다.")
@@ -51,12 +41,8 @@ class LineAcceptanceTest : AcceptanceTest() {
         // then
         // 지하철_노선_생성_실패됨
     }
-    // given
-    // 지하철_노선_등록되어_있음
-    // 지하철_노선_등록되어_있음
 
     // when
-    // 지하철_노선_목록_조회_요청
 
     // then
     // 지하철_노선_목록_응답됨
@@ -76,11 +62,8 @@ class LineAcceptanceTest : AcceptanceTest() {
             // 지하철_노선_목록_응답됨
             // 지하철_노선_목록_포함됨
         }
-    // given
-    // 지하철_노선_등록되어_있음
 
     // when
-    // 지하철_노선_조회_요청
 
     // then
     // 지하철_노선_응답됨
@@ -122,5 +105,25 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // then
         // 지하철_노선_삭제됨
+    }
+
+    private fun 노선_생성_요청(이호선: LineRequest) = RestAssured
+        .given().log().all()
+        .body(이호선)
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .`when`()
+        .post("/lines")
+        .then().log().all().extract()
+
+    private fun 노선_데이터_확인(response: ExtractableResponse<Response>, color: String, line: String) {
+        assertThat(response.body().jsonPath().getString("color")).isEqualTo(color)
+        assertThat(response.body().jsonPath().getString("name")).isEqualTo(line)
+        assertThat(response.jsonPath().getString("createdDate")).isNotNull
+        assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
+    }
+
+    private fun Http코드값_미디어타입_확인(response: ExtractableResponse<Response>, httpStatus: Int, mediaType: String) {
+        assertThat(response.statusCode()).isEqualTo(httpStatus)
+        assertThat(response.header("Content-Type")).isEqualTo(mediaType)
     }
 }
