@@ -13,7 +13,7 @@ class ExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun constraintViolationException() : ResponseEntity<HttpStatus>  {
+    fun constraintViolationException() : ResponseEntity<HttpStatus> {
         return ResponseEntity(HttpStatus.CONFLICT)
     }
 }

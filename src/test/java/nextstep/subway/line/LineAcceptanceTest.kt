@@ -46,21 +46,24 @@ class LineAcceptanceTest : AcceptanceTest() {
         HttpStatus_확인(response, HttpStatus.CONFLICT.value())
     }
 
-    // when
-
-    // then
-    // 지하철_노선_목록_응답됨
-    // 지하철_노선_목록_포함됨
-    @get:Test
-    @get:DisplayName("지하철 노선 목록을 조회한다.")
-    val lines: Unit
-        get() {
+    @Test
+    @DisplayName("지하철 노선 목록을 조회한다.")
+    fun lines(){
             // given
             // 지하철_노선_등록되어_있음
             // 지하철_노선_등록되어_있음
+            노선_생성_요청(LineRequest("이호선","초록색"))
+            노선_생성_요청(LineRequest("일호선","파란색"))
+            노선_생성_요청(LineRequest("칠호선","연두색"))
 
             // when
             // 지하철_노선_목록_조회_요청
+            val response: ExtractableResponse<Response> = RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .`when`()
+                .get("/lines")
+                .then().log().all().extract()
 
             // then
             // 지하철_노선_목록_응답됨
