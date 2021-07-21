@@ -25,7 +25,8 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // then
         // 지하철_노선_생성됨
-        Http코드값_미디어타입_확인(response, HttpStatus.CREATED.value(),MediaType.APPLICATION_JSON_VALUE)
+        HttpStatus_확인(response, HttpStatus.CREATED.value())
+        미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
         노선_데이터_확인(response,"초록색","2호선")
     }
 
@@ -34,12 +35,15 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun createLine2() {
         // given
         // 지하철_노선_등록되어_있음
+        노선_생성_요청(LineRequest("2호선","초록색"))
 
         // when
         // 지하철_노선_생성_요청
+        val response = 노선_생성_요청(LineRequest("2호선","초록색"))
 
         // then
         // 지하철_노선_생성_실패됨
+        HttpStatus_확인(response, HttpStatus.CONFLICT.value())
     }
 
     // when
@@ -122,8 +126,11 @@ class LineAcceptanceTest : AcceptanceTest() {
         assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
     }
 
-    private fun Http코드값_미디어타입_확인(response: ExtractableResponse<Response>, httpStatus: Int, mediaType: String) {
+    private fun HttpStatus_확인(response: ExtractableResponse<Response>, httpStatus: Int) {
         assertThat(response.statusCode()).isEqualTo(httpStatus)
+    }
+
+    private fun 미디어타입_확인(response: ExtractableResponse<Response>, mediaType: String) {
         assertThat(response.header("Content-Type")).isEqualTo(mediaType)
     }
 }
