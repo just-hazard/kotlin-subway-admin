@@ -1,6 +1,7 @@
 package nextstep.subway.station.domain
 
 import nextstep.subway.common.BaseEntity
+import nextstep.subway.line.domain.Line
 import javax.persistence.*
 
 @Entity
@@ -10,7 +11,9 @@ class Station (
     val id: Long = 0,
 
     @Column(unique = true)
-    var name: String
+    var name: String,
+    @ManyToOne
+    var line: Line
     ) : BaseEntity() {
-        constructor(name: String) : this(0, name)
+        constructor(name: String) : this(0, name, Line("",""))
     }

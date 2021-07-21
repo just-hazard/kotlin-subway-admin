@@ -5,7 +5,9 @@ import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import nextstep.subway.AcceptanceTest
 import nextstep.subway.line.dto.LineRequest
+import nextstep.subway.line.dto.LineResponse
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -25,7 +27,7 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // then
         // 지하철_노선_생성됨
-        HttpStatus_확인(response, HttpStatus.CREATED.value())
+        응답_확인(response, HttpStatus.CREATED.value())
         미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
         노선_데이터_확인(response,"초록색","2호선")
     }
@@ -43,32 +45,34 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // then
         // 지하철_노선_생성_실패됨
-        HttpStatus_확인(response, HttpStatus.CONFLICT.value())
+        응답_확인(response, HttpStatus.CONFLICT.value())
     }
 
     @Test
     @DisplayName("지하철 노선 목록을 조회한다.")
     fun lines(){
-            // given
-            // 지하철_노선_등록되어_있음
-            // 지하철_노선_등록되어_있음
-            노선_생성_요청(LineRequest("이호선","초록색"))
-            노선_생성_요청(LineRequest("일호선","파란색"))
-            노선_생성_요청(LineRequest("칠호선","연두색"))
+        // given
+        // 지하철_노선_등록되어_있음
+        // 지하철_노선_등록되어_있음
+        노선_생성_요청(LineRequest("이호선","초록색"))
+        노선_생성_요청(LineRequest("일호선","파란색"))
+        노선_생성_요청(LineRequest("칠호선","연두색"))
 
-            // when
-            // 지하철_노선_목록_조회_요청
-            val response: ExtractableResponse<Response> = RestAssured
-                .given().log().all()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .`when`()
-                .get("/lines")
-                .then().log().all().extract()
+        // when
+        // 지하철_노선_목록_조회_요청
+        val response: ExtractableResponse<Response> = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .`when`()
+            .get("/lines")
+            .then().log().all().extract()
 
-            // then
-            // 지하철_노선_목록_응답됨
-            // 지하철_노선_목록_포함됨
-        }
+        // then
+        // 지하철_노선_목록_응답됨
+        응답_확인(response, HttpStatus.OK.value())
+        // 지하철_노선_목록_포함됨
+        노선_목록_검증(response)
+    }
 
     // when
 
@@ -129,11 +133,22 @@ class LineAcceptanceTest : AcceptanceTest() {
         assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
     }
 
-    private fun HttpStatus_확인(response: ExtractableResponse<Response>, httpStatus: Int) {
+    private fun 응답_확인(response: ExtractableResponse<Response>, httpStatus: Int) {
         assertThat(response.statusCode()).isEqualTo(httpStatus)
     }
 
     private fun 미디어타입_확인(response: ExtractableResponse<Response>, mediaType: String) {
         assertThat(response.header("Content-Type")).isEqualTo(mediaType)
+    }
+
+    private fun 노선_목록_검증(response: ExtractableResponse<Response>) {
+        response.jsonPath().getList(".",LineResponse::class.java)
+            .forEach {
+                assertThat(it.id).asList().contains(1L,2L,3L)
+                assertThat(it.name).asList().contains("일호선","이호선","칠호선")
+                assertThat(it.id).asList().contains("파란색","초록색","연두색")
+                assertThat(it.createdDate).isNotNull
+                assertThat(it.modifiedDate).isNotNull
+        }
     }
 }
