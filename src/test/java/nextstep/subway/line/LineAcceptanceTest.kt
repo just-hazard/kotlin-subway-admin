@@ -6,11 +6,15 @@ import io.restassured.response.Response
 import nextstep.subway.AcceptanceTest
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
+import org.assertj.core.api.AbstractSoftAssertions.assertAll
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.function.Executable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
@@ -70,10 +74,6 @@ class LineAcceptanceTest : AcceptanceTest() {
         노선_목록_검증(response)
     }
 
-    // when
-
-    // then
-    // 지하철_노선_응답됨
     @Test
     @DisplayName("지하철 노선을 조회한다.")
     fun findLine() {
@@ -98,12 +98,19 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun updateLine() {
         // given
         // 지하철_노선_등록되어_있음
-
+        val createResponse = 노선_생성_요청(LineRequest("일호선","파란색"))
+        val changeLine = LineRequest("이호선","초록색")
         // when
         // 지하철_노선_수정_요청
+        changeLine(createResponse,changeLine)
+        val response = 노선_조회(createResponse)
 
         // then
         // 지하철_노선_수정됨
+        응답_확인(response, HttpStatus.OK.value())
+        미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
+        노선_수정_확인(createResponse,response)
+
     }
 
     @DisplayName("지하철 노선을 제거한다.")
@@ -172,4 +179,39 @@ class LineAcceptanceTest : AcceptanceTest() {
         .`when`()
         .get("/lines")
         .then().log().all().extract()
+
+    private fun 노선_수정_확인(createResponse: ExtractableResponse<Response>, response: ExtractableResponse<Response>) {
+        assertAll(
+            Executable {
+                assertThat(response.jsonPath().getLong("id"))
+                    .isEqualTo(createResponse.jsonPath().getString("id").toLong())
+            },
+            Executable {
+                assertThat(response.jsonPath().getString("name"))
+                    .isNotEqualTo(createResponse.jsonPath().getString("name"))
+            },
+            Executable {
+                assertThat(response.jsonPath().getString("color"))
+                    .isNotEqualTo(createResponse.jsonPath().getString("color"))
+            },
+            Executable {
+                assertThat(response.jsonPath().getString("createdDate")).isNotNull()
+            },
+            Executable {
+                assertThat(response.jsonPath().getString("modifiedDate"))
+                    .isNotEqualTo(createResponse.jsonPath().getString("modifiedDate"))
+            }
+        )
+    }
+
+    private fun changeLine(createResponse: ExtractableResponse<Response>, lineRequest: LineRequest) {
+        RestAssured
+            .given().log().all()
+            .body(lineRequest)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .`when`()
+            .put(headerLocation(createResponse))
+            .then().log().all().extract()
+    }
 }
+
