@@ -61,12 +61,7 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // when
         // 지하철_노선_목록_조회_요청
-        val response: ExtractableResponse<Response> = RestAssured
-            .given().log().all()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .get("/lines")
-            .then().log().all().extract()
+        val response = 노선들_조회()
 
         // then
         // 지하철_노선_목록_응답됨
@@ -79,19 +74,24 @@ class LineAcceptanceTest : AcceptanceTest() {
 
     // then
     // 지하철_노선_응답됨
-    @get:Test
-    @get:DisplayName("지하철 노선을 조회한다.")
-    val line: Unit
-        get() {
-            // given
-            // 지하철_노선_등록되어_있음
+    @Test
+    @DisplayName("지하철 노선을 조회한다.")
+    fun findLine() {
+        // given
+        // 지하철_노선_등록되어_있음
+        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색"))
+        노선_생성_요청(LineRequest("일호선","파란색"))
 
-            // when
-            // 지하철_노선_조회_요청
+        // when
+        // 지하철_노선_조회_요청
+        val response = 노선_조회(createResponse)
 
-            // then
-            // 지하철_노선_응답됨
-        }
+        // then
+        // 지하철_노선_응답됨
+        응답_확인(response, HttpStatus.OK.value())
+        미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
+        노선_데이터_확인(response,"초록색","이호선")
+    }
 
     @DisplayName("지하철 노선을 수정한다.")
     @Test
@@ -154,6 +154,22 @@ class LineAcceptanceTest : AcceptanceTest() {
                 assertThat(it.createdDate).isNotNull
                 assertThat(it.modifiedDate).isNotNull
             }
-
     }
+
+    private fun headerLocation(createResponse: ExtractableResponse<Response>) =
+        createResponse.header("Location")
+
+    private fun 노선_조회(createResponse: ExtractableResponse<Response>) =
+        RestAssured
+            .given().log().all()
+            .`when`()
+            .get(headerLocation(createResponse))
+            .then().log().all().extract()
+
+    private fun 노선들_조회() = RestAssured
+        .given().log().all()
+        .contentType(MediaType.APPLICATION_JSON_VALUE)
+        .`when`()
+        .get("/lines")
+        .then().log().all().extract()
 }

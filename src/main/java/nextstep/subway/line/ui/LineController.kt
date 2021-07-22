@@ -18,7 +18,13 @@ class LineController(private val lineService: LineService) {
     }
 
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun selectLines() : ResponseEntity<List<LineResponse>> {
+    fun findLines() : ResponseEntity<List<LineResponse>> {
         return ResponseEntity.ok().body(lineService.findAll())
+    }
+
+
+    @GetMapping(value = ["{id}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun findLine(@PathVariable id: Long) : ResponseEntity<LineResponse> {
+        return ResponseEntity.ok().body(lineService.findById(id))
     }
 }
