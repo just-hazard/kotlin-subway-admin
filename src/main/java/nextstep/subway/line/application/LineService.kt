@@ -21,6 +21,7 @@ class LineService(private val lineRepository: LineRepository) {
             .map { LineResponse.of(it!!) }.collect(toList())
     }
 
+    @Transactional(readOnly = true)
     fun findById(id: Long): LineResponse {
         return LineResponse.of(lineRepository.findById(id).orElseThrow { EntityNotFoundException("존재하지 않는 노선입니다.") }!!)
     }
