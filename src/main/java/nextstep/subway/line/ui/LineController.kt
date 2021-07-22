@@ -27,4 +27,9 @@ class LineController(private val lineService: LineService) {
     fun findLine(@PathVariable id: Long) : ResponseEntity<LineResponse> {
         return ResponseEntity.ok().body(lineService.findById(id))
     }
+
+    @PutMapping(value = ["{id}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun changeLine(@PathVariable id: Long, @RequestBody request: LineRequest) : ResponseEntity<LineResponse> {
+        return ResponseEntity.ok().body(lineService.changeLine(id, request))
+    }
 }
