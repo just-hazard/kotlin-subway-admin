@@ -3,11 +3,9 @@ package nextstep.subway.line.ui
 import nextstep.subway.line.application.LineService
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
@@ -17,5 +15,10 @@ class LineController(private val lineService: LineService) {
     fun createLine(@RequestBody lineRequest: LineRequest): ResponseEntity<LineResponse> {
         val line = lineService.saveLine(lineRequest)
         return ResponseEntity.created(URI.create("/lines/" + line.id)).body(line)
+    }
+
+    @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun selectLines() : ResponseEntity<List<LineResponse>> {
+        return ResponseEntity.ok().body(lineService.findAll())
     }
 }

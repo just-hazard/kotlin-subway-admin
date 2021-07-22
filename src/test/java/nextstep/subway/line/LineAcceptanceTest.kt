@@ -7,7 +7,8 @@ import nextstep.subway.AcceptanceTest
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions
+import org.hamcrest.CoreMatchers
+import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -144,11 +145,15 @@ class LineAcceptanceTest : AcceptanceTest() {
     private fun 노선_목록_검증(response: ExtractableResponse<Response>) {
         response.jsonPath().getList(".",LineResponse::class.java)
             .forEach {
-                assertThat(it.id).asList().contains(1L,2L,3L)
-                assertThat(it.name).asList().contains("일호선","이호선","칠호선")
-                assertThat(it.id).asList().contains("파란색","초록색","연두색")
+                MatcherAssert.assertThat(it.id,
+                    CoreMatchers.anyOf(CoreMatchers.equalTo(1L), CoreMatchers.equalTo(2L),CoreMatchers.equalTo(3L)))
+                MatcherAssert.assertThat(it.name,
+                    CoreMatchers.anyOf(CoreMatchers.containsString("일호선"),CoreMatchers.containsString("이호선"),CoreMatchers.containsString("칠호선")))
+                MatcherAssert.assertThat(it.color,
+                    CoreMatchers.anyOf(CoreMatchers.containsString("초록색"),CoreMatchers.containsString("파란색"),CoreMatchers.containsString("연두색")))
                 assertThat(it.createdDate).isNotNull
                 assertThat(it.modifiedDate).isNotNull
-        }
+            }
+
     }
 }
