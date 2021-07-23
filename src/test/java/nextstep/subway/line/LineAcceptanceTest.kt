@@ -100,6 +100,7 @@ class LineAcceptanceTest : AcceptanceTest() {
         // 지하철_노선_등록되어_있음
         val createResponse = 노선_생성_요청(LineRequest("일호선","파란색"))
         val changeLine = LineRequest("이호선","초록색")
+
         // when
         // 지하철_노선_수정_요청
         changeLine(createResponse,changeLine)
@@ -118,13 +119,23 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun deleteLine() {
         // given
         // 지하철_노선_등록되어_있음
-
+        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색"))
         // when
         // 지하철_노선_제거_요청
+        val response = deleteLine(createResponse)
+        deleteLine(createResponse)
 
         // then
         // 지하철_노선_삭제됨
+        응답_확인(response, HttpStatus.NO_CONTENT.value())
     }
+
+    private fun deleteLine(createResponse: ExtractableResponse<Response>) =
+        RestAssured
+            .given().log().all()
+            .`when`()
+            .delete(headerLocation(createResponse))
+            .then().log().all().extract()
 
     private fun 노선_생성_요청(이호선: LineRequest) = RestAssured
         .given().log().all()
