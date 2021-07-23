@@ -123,7 +123,6 @@ class LineAcceptanceTest : AcceptanceTest() {
         // when
         // 지하철_노선_제거_요청
         val response = deleteLine(createResponse)
-        deleteLine(createResponse)
 
         // then
         // 지하철_노선_삭제됨

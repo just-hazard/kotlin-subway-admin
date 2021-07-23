@@ -34,4 +34,8 @@ class LineService(private val lineRepository: LineRepository) {
 
     private fun findLine(id: Long) =
         lineRepository.findById(id).orElseThrow { EntityNotFoundException("존재하지 않는 노선입니다.") }!!
+
+    fun deleteLine(id: Long) {
+        lineRepository.deleteById(id)
+    }
 }

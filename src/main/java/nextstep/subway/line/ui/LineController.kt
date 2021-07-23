@@ -32,4 +32,10 @@ class LineController(private val lineService: LineService) {
     fun changeLine(@PathVariable id: Long, @RequestBody request: LineRequest) : ResponseEntity<LineResponse> {
         return ResponseEntity.ok().body(lineService.changeLine(id, request))
     }
+
+    @DeleteMapping(value = ["{id}"])
+    fun deleteLine(@PathVariable id: Long) : ResponseEntity<*> {
+        lineService.deleteLine(id)
+        return ResponseEntity.noContent().build<Any>()
+    }
 }
