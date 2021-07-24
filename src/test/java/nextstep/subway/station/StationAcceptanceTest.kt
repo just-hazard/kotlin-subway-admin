@@ -4,6 +4,7 @@ import io.restassured.RestAssured
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
 import nextstep.subway.AcceptanceTest
+import nextstep.subway.station.dto.StationRequest
 import nextstep.subway.station.dto.StationResponse
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -18,18 +19,8 @@ class StationAcceptanceTest : AcceptanceTest() {
     @DisplayName("지하철역을 생성한다.")
     @Test
     fun createStation() {
-        // given
-        val params: MutableMap<String, String> = HashMap()
-        params["name"] = "강남역"
-
-        // when
-        val response = RestAssured.given().log().all()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .post("/stations")
-            .then().log().all()
-            .extract()
+        // given, when
+        val response = 지하철역_생성_요청(StationRequest("강남역"))
 
         // then
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value())
@@ -40,25 +31,10 @@ class StationAcceptanceTest : AcceptanceTest() {
     @Test
     fun createStationWithDuplicateName() {
         // given
-        val params: MutableMap<String, String> = HashMap()
-        params["name"] = "강남역"
-        RestAssured.given().log().all()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .post("/stations")
-            .then().log().all()
-            .extract()
+        지하철역_생성_요청(StationRequest("강남역"))
 
         // when
-        val response = RestAssured.given().log().all()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .post("/stations")
-            .then()
-            .log().all()
-            .extract()
+        val response = 지하철역_생성_요청(StationRequest("강남역"))
 
         // then
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
@@ -74,24 +50,8 @@ class StationAcceptanceTest : AcceptanceTest() {
         // then
         get() {
             /// given
-            val params1: MutableMap<String, String> = HashMap()
-            params1["name"] = "강남역"
-            val createResponse1 = RestAssured.given().log().all()
-                .body(params1)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .`when`()
-                .post("/stations")
-                .then().log().all()
-                .extract()
-            val params2: MutableMap<String, String> = HashMap()
-            params2["name"] = "역삼역"
-            val createResponse2 = RestAssured.given().log().all()
-                .body(params2)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .`when`()
-                .post("/stations")
-                .then().log().all()
-                .extract()
+            val createResponse1 = 지하철역_생성_요청(StationRequest("강남역"))
+            val createResponse2 = 지하철역_생성_요청(StationRequest("역삼역"))
 
             // when
             val response = RestAssured.given().log().all()
@@ -116,15 +76,7 @@ class StationAcceptanceTest : AcceptanceTest() {
     @Test
     fun deleteStation() {
         // given
-        val params: MutableMap<String, String> = HashMap()
-        params["name"] = "강남역"
-        val createResponse = RestAssured.given().log().all()
-            .body(params)
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .`when`()
-            .post("/stations")
-            .then().log().all()
-            .extract()
+        val createResponse = 지하철역_생성_요청(StationRequest("강남역"))
 
         // when
         val uri = createResponse.header("Location")
@@ -136,5 +88,16 @@ class StationAcceptanceTest : AcceptanceTest() {
 
         // then
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value())
+    }
+
+    companion object {
+        fun 지하철역_생성_요청(request: StationRequest) =
+            RestAssured.given().log().all()
+                .body(request)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .`when`()
+                .post("/stations")
+                .then().log().all()
+                .extract()
     }
 }
