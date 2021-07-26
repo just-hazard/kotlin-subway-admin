@@ -12,8 +12,7 @@ class Station (
 
     @Column(unique = true)
     var name: String,
-    @ManyToOne
-    var line: Line
+
     ) : BaseEntity() {
-        constructor(name: String) : this(0, name, Line("",""))
+        constructor(name: String) : this(0, name)
     }
