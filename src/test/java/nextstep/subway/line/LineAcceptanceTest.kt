@@ -6,12 +6,14 @@ import io.restassured.response.Response
 import nextstep.subway.AcceptanceTest
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
-import org.assertj.core.api.AbstractSoftAssertions.assertAll
+import nextstep.subway.station.StationAcceptanceTest
+import nextstep.subway.station.dto.StationRequest
+import nextstep.subway.station.dto.StationResponse
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
@@ -20,15 +22,28 @@ import org.springframework.http.MediaType
 
 @DisplayName("지하철 노선 관련 기능")
 class LineAcceptanceTest : AcceptanceTest() {
+
+    lateinit var 잠실역 : StationResponse
+    lateinit var 건대입구역 : StationResponse
+    lateinit var 종합운동장역 : StationResponse
+
+
+    @BeforeEach
+    override fun setUp() {
+        잠실역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("잠실역")).`as`(StationResponse::class.java)
+        건대입구역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("건대입구역")).`as`(StationResponse::class.java)
+        종합운동장역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("종합운동장역")).`as`(StationResponse::class.java)
+    }
+
     @DisplayName("지하철 노선을 생성한다.")
     @Test
     fun createLine() {
         // given
-        val 이호선 = LineRequest("2호선","초록색")
+        val 이호선 = LineRequest("2호선","초록색",잠실역.id, 건대입구역.id, 10)
 
         // when
         // 지하철_노선_생성_요청
-        val response: ExtractableResponse<Response> = 노선_생성_요청(이호선)
+        val response = 노선_생성_요청(이호선)
 
         // then
         // 지하철_노선_생성됨
@@ -42,11 +57,11 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun createLine2() {
         // given
         // 지하철_노선_등록되어_있음
-        노선_생성_요청(LineRequest("2호선","초록색"))
+        노선_생성_요청(LineRequest("2호선","초록색",잠실역.id, 건대입구역.id, 10))
 
         // when
         // 지하철_노선_생성_요청
-        val response = 노선_생성_요청(LineRequest("2호선","초록색"))
+        val response = 노선_생성_요청(LineRequest("2호선","초록색",잠실역.id, 건대입구역.id, 10))
 
         // then
         // 지하철_노선_생성_실패됨
@@ -59,9 +74,9 @@ class LineAcceptanceTest : AcceptanceTest() {
         // given
         // 지하철_노선_등록되어_있음
         // 지하철_노선_등록되어_있음
-        노선_생성_요청(LineRequest("이호선","초록색"))
-        노선_생성_요청(LineRequest("일호선","파란색"))
-        노선_생성_요청(LineRequest("칠호선","연두색"))
+        노선_생성_요청(LineRequest("이호선","초록색",잠실역.id, 건대입구역.id, 10))
+        노선_생성_요청(LineRequest("일호선","파란색",잠실역.id, 건대입구역.id, 10))
+        노선_생성_요청(LineRequest("칠호선","연두색",잠실역.id, 건대입구역.id, 10))
 
         // when
         // 지하철_노선_목록_조회_요청
@@ -79,8 +94,8 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun findLine() {
         // given
         // 지하철_노선_등록되어_있음
-        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색"))
-        노선_생성_요청(LineRequest("일호선","파란색"))
+        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색",잠실역.id, 건대입구역.id, 10))
+        노선_생성_요청(LineRequest("일호선","파란색",잠실역.id, 건대입구역.id, 10))
 
         // when
         // 지하철_노선_조회_요청
@@ -98,8 +113,8 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun updateLine() {
         // given
         // 지하철_노선_등록되어_있음
-        val createResponse = 노선_생성_요청(LineRequest("일호선","파란색"))
-        val changeLine = LineRequest("이호선","초록색")
+        val createResponse = 노선_생성_요청(LineRequest("일호선","파란색",잠실역.id, 건대입구역.id, 10))
+        val changeLine = LineRequest("이호선","초록색",잠실역.id, 건대입구역.id, 10)
 
         // when
         // 지하철_노선_수정_요청
@@ -119,7 +134,7 @@ class LineAcceptanceTest : AcceptanceTest() {
     fun deleteLine() {
         // given
         // 지하철_노선_등록되어_있음
-        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색"))
+        val createResponse = 노선_생성_요청(LineRequest("이호선","초록색",잠실역.id, 건대입구역.id, 10))
         // when
         // 지하철_노선_제거_요청
         val response = deleteLine(createResponse)
