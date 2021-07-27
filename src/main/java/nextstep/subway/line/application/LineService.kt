@@ -1,8 +1,10 @@
 package nextstep.subway.line.application
 
+import nextstep.subway.line.domain.Line
 import nextstep.subway.line.domain.LineRepository
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
+import nextstep.subway.station.domain.StationRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors.toList
@@ -10,9 +12,14 @@ import javax.persistence.EntityNotFoundException
 
 @Service
 @Transactional
-class LineService(private val lineRepository: LineRepository) {
+class LineService(private val lineRepository: LineRepository,
+        private val stationRepository: StationRepository) {
     fun saveLine(request: LineRequest): LineResponse {
-        return LineResponse.of(lineRepository.save(request.toLine()))
+        val upStation = stationRepository.findById(request.upStationId).orElseThrow { EntityNotFoundException("상행역이 존재하지 않습니다.") }
+        val downStation = stationRepository.findById(request.downStationId).orElseThrow { EntityNotFoundException("하행역이 존재하지 않습니다.") }
+
+
+        return LineResponse.of(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
     }
 
     @Transactional(readOnly = true)

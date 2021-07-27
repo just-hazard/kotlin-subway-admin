@@ -23,13 +23,13 @@ import org.springframework.http.MediaType
 @DisplayName("지하철 노선 관련 기능")
 class LineAcceptanceTest : AcceptanceTest() {
 
-    lateinit var 잠실역 : StationResponse
-    lateinit var 건대입구역 : StationResponse
-    lateinit var 종합운동장역 : StationResponse
+    private lateinit var 잠실역 : StationResponse
+    private lateinit var 건대입구역 : StationResponse
+    private lateinit var 종합운동장역 : StationResponse
 
 
     @BeforeEach
-    override fun setUp() {
+    fun setUp() {
         잠실역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("잠실역")).`as`(StationResponse::class.java)
         건대입구역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("건대입구역")).`as`(StationResponse::class.java)
         종합운동장역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("종합운동장역")).`as`(StationResponse::class.java)
@@ -38,6 +38,7 @@ class LineAcceptanceTest : AcceptanceTest() {
     @DisplayName("지하철 노선을 생성한다.")
     @Test
     fun createLine() {
+
         // given
         val 이호선 = LineRequest("2호선","초록색",잠실역.id, 건대입구역.id, 10)
 
