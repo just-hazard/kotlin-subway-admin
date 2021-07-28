@@ -24,9 +24,7 @@ class Line(
 
     constructor(name: String, color: String): this(0, name, color, Sections(mutableListOf()))
 
-    companion object {
-        fun of(name: String, color: String, upstation: Station, downStation: Station, distance: Int) : Line {
-            return Line(0,name, color, Sections(this, upstation, downStation, distance))
-        }
+    fun of(name: String, color: String, upStation: Station, downStation: Station, distance: Int) : Line {
+        return Line(0,name, color, Sections(this, upStation, downStation, distance))
     }
 }
