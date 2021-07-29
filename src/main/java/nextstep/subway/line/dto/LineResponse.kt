@@ -1,7 +1,6 @@
 package nextstep.subway.line.dto
 
 import nextstep.subway.line.domain.Line
-import nextstep.subway.station.domain.Station
 import nextstep.subway.station.dto.StationResponse
 import java.time.LocalDateTime
 
@@ -22,7 +21,7 @@ class LineResponse(
         }
 
         private fun findSectionChangeStations(line: Line) = line.sections.sections.map {
-            StationResponse.of(it.upstation)
+            StationResponse.of(it.upStation)
             StationResponse.of(it.downStation)
         }.toList()
     }

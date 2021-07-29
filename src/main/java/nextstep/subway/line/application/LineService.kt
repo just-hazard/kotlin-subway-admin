@@ -14,10 +14,10 @@ import javax.persistence.EntityNotFoundException
 @Transactional
 class LineService(private val lineRepository: LineRepository,
         private val stationRepository: StationRepository) {
+
     fun saveLine(request: LineRequest): LineResponse {
         val upStation = stationRepository.findById(request.upStationId).orElseThrow { EntityNotFoundException("상행역이 존재하지 않습니다.") }
         val downStation = stationRepository.findById(request.downStationId).orElseThrow { EntityNotFoundException("하행역이 존재하지 않습니다.") }
-
 
         return LineResponse.of(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
     }

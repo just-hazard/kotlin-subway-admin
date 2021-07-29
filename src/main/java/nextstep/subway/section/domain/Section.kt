@@ -9,13 +9,13 @@ import javax.persistence.*
 class Section (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    val id: Long,
+    var id: Long,
     @ManyToOne
-    val line: Line,
+    var line: Line,
     @ManyToOne
-    val upstation: Station,
+    var upStation: Station,
     @ManyToOne
-    val downStation: Station,
+    var downStation: Station,
 
     val distance: Int
 ) : BaseEntity()
