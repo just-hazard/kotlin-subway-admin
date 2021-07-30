@@ -161,6 +161,7 @@ class LineAcceptanceTest : AcceptanceTest() {
         .then().log().all().extract()
 
     private fun 노선_데이터_확인(response: ExtractableResponse<Response>, color: String, line: String) {
+
         assertThat(response.body().jsonPath().getString("color")).isEqualTo(color)
         assertThat(response.body().jsonPath().getString("name")).isEqualTo(line)
         assertThat(response.jsonPath().getString("createdDate")).isNotNull
