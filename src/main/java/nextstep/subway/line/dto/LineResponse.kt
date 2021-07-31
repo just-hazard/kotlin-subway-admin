@@ -1,8 +1,10 @@
 package nextstep.subway.line.dto
 
 import nextstep.subway.line.domain.Line
+import nextstep.subway.station.domain.Station
 import nextstep.subway.station.dto.StationResponse
 import java.time.LocalDateTime
+import kotlin.streams.toList
 
 class LineResponse(
     val id: Long,
@@ -14,15 +16,14 @@ class LineResponse(
 ) {
 
     companion object {
-        fun of(line: Line): LineResponse {
-            val stations = findSectionChangeStations(line)
-
-            return LineResponse(line.id, line.name, line.color, line.createdDate, line.modifiedDate, stations)
+        fun from(line: Line): LineResponse {
+            val stations = line.sections.getSortStations()
+            return LineResponse(line.id, line.name, line.color, line.createdDate, line.modifiedDate, convertStationAtStationResponse(stations))
         }
 
-        private fun findSectionChangeStations(line: Line) = line.sections.sections.map {
-            StationResponse.of(it.upStation)
-            StationResponse.of(it.downStation)
-        }.toList()
+        private fun convertStationAtStationResponse(stations: List<Station>) =
+            stations.stream().map {
+                StationResponse.of(it)
+            }.toList()
     }
 }

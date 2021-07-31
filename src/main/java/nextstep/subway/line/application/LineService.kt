@@ -19,24 +19,24 @@ class LineService(private val lineRepository: LineRepository,
         val upStation = stationRepository.findById(request.upStationId).orElseThrow { EntityNotFoundException("상행역이 존재하지 않습니다.") }
         val downStation = stationRepository.findById(request.downStationId).orElseThrow { EntityNotFoundException("하행역이 존재하지 않습니다.") }
 
-        return LineResponse.of(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
+        return LineResponse.from(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
     }
 
     @Transactional(readOnly = true)
     fun findAll(): List<LineResponse> {
         return lineRepository.findAll().stream()
-            .map { LineResponse.of(it!!) }.collect(toList())
+            .map { LineResponse.from(it!!) }.collect(toList())
     }
 
     @Transactional(readOnly = true)
     fun findById(id: Long): LineResponse {
-        return LineResponse.of(findLine(id))
+        return LineResponse.from(findLine(id))
     }
 
     fun changeLine(id: Long, request: LineRequest): LineResponse {
         val line = findLine(id)
         line.update(request.toLine())
-        return LineResponse.of(line)
+        return LineResponse.from(line)
     }
 
     private fun findLine(id: Long) =
