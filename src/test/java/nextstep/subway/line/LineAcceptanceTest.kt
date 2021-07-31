@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import java.util.stream.Collectors
 
 @DisplayName("지하철 노선 관련 기능")
 class LineAcceptanceTest : AcceptanceTest() {
@@ -38,7 +39,6 @@ class LineAcceptanceTest : AcceptanceTest() {
     @DisplayName("지하철 노선을 생성한다.")
     @Test
     fun createLine() {
-
         // given
         val 이호선 = LineRequest("2호선","초록색",잠실역.id, 건대입구역.id, 10)
 
@@ -51,6 +51,7 @@ class LineAcceptanceTest : AcceptanceTest() {
         응답_확인(response, HttpStatus.CREATED.value())
         미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
         노선_데이터_확인(response,"초록색","2호선")
+        노선_포함_지하철_확인(response, "잠실역", "건대입구역")
     }
 
     @DisplayName("기존에 존재하는 지하철 노선 이름으로 지하철 노선을 생성한다.")
@@ -143,6 +144,13 @@ class LineAcceptanceTest : AcceptanceTest() {
         // then
         // 지하철_노선_삭제됨
         응답_확인(response, HttpStatus.NO_CONTENT.value())
+    }
+
+    private fun 노선_포함_지하철_확인(response: ExtractableResponse<Response>, vararg expectedStations: String) {
+        val stations = response.jsonPath().getList("stations",
+            StationResponse::class.java)
+            .stream().map(StationResponse::name).collect(Collectors.toList())
+        assertThat(stations).containsExactly(*expectedStations)
     }
 
     private fun deleteLine(createResponse: ExtractableResponse<Response>) =
