@@ -108,6 +108,7 @@ class LineAcceptanceTest : AcceptanceTest() {
         응답_확인(response, HttpStatus.OK.value())
         미디어타입_확인(response, MediaType.APPLICATION_JSON_VALUE)
         노선_데이터_확인(response,"초록색","이호선")
+        노선_포함_지하철_확인(response, "잠실역", "건대입구역")
     }
 
     @DisplayName("지하철 노선을 수정한다.")
