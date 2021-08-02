@@ -20,6 +20,7 @@ import org.junit.jupiter.api.function.Executable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import java.util.stream.Collectors
+import kotlin.streams.toList
 
 @DisplayName("지하철 노선 관련 기능")
 class LineAcceptanceTest : AcceptanceTest() {
@@ -121,7 +122,7 @@ class LineAcceptanceTest : AcceptanceTest() {
 
         // when
         // 지하철_노선_수정_요청
-        changeLine(createResponse,changeLine)
+        지하철_노선_수정(createResponse,changeLine)
         val response = 노선_조회(createResponse)
 
         // then
@@ -147,107 +148,109 @@ class LineAcceptanceTest : AcceptanceTest() {
         응답_확인(response, HttpStatus.NO_CONTENT.value())
     }
 
-    private fun 노선_포함_지하철_확인(response: ExtractableResponse<Response>, vararg expectedStations: String) {
-        val stations = response.jsonPath().getList("stations",
-            StationResponse::class.java)
-            .stream().map(StationResponse::name).collect(Collectors.toList())
-        assertThat(stations).containsExactly(*expectedStations)
-    }
+    companion object {
+        fun 노선_포함_지하철_확인(response: ExtractableResponse<Response>, vararg expectedStations: String) {
+            val stations = response.jsonPath().getList("stations",
+                StationResponse::class.java)
+                .stream().map{it.name}.toList()
+            assertThat(stations).containsExactly(*expectedStations)
+        }
 
-    private fun deleteLine(createResponse: ExtractableResponse<Response>) =
-        RestAssured
+        fun deleteLine(createResponse: ExtractableResponse<Response>) =
+            RestAssured
+                .given().log().all()
+                .`when`()
+                .delete(headerLocation(createResponse))
+                .then().log().all().extract()
+
+        fun 노선_생성_요청(이호선: LineRequest) = RestAssured
             .given().log().all()
-            .`when`()
-            .delete(headerLocation(createResponse))
-            .then().log().all().extract()
-
-    private fun 노선_생성_요청(이호선: LineRequest) = RestAssured
-        .given().log().all()
-        .body(이호선)
-        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .`when`()
-        .post("/lines")
-        .then().log().all().extract()
-
-    private fun 노선_데이터_확인(response: ExtractableResponse<Response>, color: String, line: String) {
-
-        assertThat(response.body().jsonPath().getString("color")).isEqualTo(color)
-        assertThat(response.body().jsonPath().getString("name")).isEqualTo(line)
-        assertThat(response.jsonPath().getString("createdDate")).isNotNull
-        assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
-    }
-
-    private fun 응답_확인(response: ExtractableResponse<Response>, httpStatus: Int) {
-        assertThat(response.statusCode()).isEqualTo(httpStatus)
-    }
-
-    private fun 미디어타입_확인(response: ExtractableResponse<Response>, mediaType: String) {
-        assertThat(response.header("Content-Type")).isEqualTo(mediaType)
-    }
-
-    private fun 노선_목록_검증(response: ExtractableResponse<Response>) {
-        response.jsonPath().getList(".",LineResponse::class.java)
-            .forEach {
-                MatcherAssert.assertThat(it.id,
-                    CoreMatchers.anyOf(CoreMatchers.equalTo(1L), CoreMatchers.equalTo(2L),CoreMatchers.equalTo(3L)))
-                MatcherAssert.assertThat(it.name,
-                    CoreMatchers.anyOf(CoreMatchers.containsString("일호선"),CoreMatchers.containsString("이호선"),CoreMatchers.containsString("칠호선")))
-                MatcherAssert.assertThat(it.color,
-                    CoreMatchers.anyOf(CoreMatchers.containsString("초록색"),CoreMatchers.containsString("파란색"),CoreMatchers.containsString("연두색")))
-                assertThat(it.createdDate).isNotNull
-                assertThat(it.modifiedDate).isNotNull
-            }
-    }
-
-    private fun headerLocation(createResponse: ExtractableResponse<Response>) =
-        createResponse.header("Location")
-
-    private fun 노선_조회(createResponse: ExtractableResponse<Response>) =
-        RestAssured
-            .given().log().all()
-            .`when`()
-            .get(headerLocation(createResponse))
-            .then().log().all().extract()
-
-    private fun 노선들_조회() = RestAssured
-        .given().log().all()
-        .contentType(MediaType.APPLICATION_JSON_VALUE)
-        .`when`()
-        .get("/lines")
-        .then().log().all().extract()
-
-    private fun 노선_수정_확인(createResponse: ExtractableResponse<Response>, response: ExtractableResponse<Response>) {
-        assertAll(
-            Executable {
-                assertThat(response.jsonPath().getLong("id"))
-                    .isEqualTo(createResponse.jsonPath().getString("id").toLong())
-            },
-            Executable {
-                assertThat(response.jsonPath().getString("name"))
-                    .isNotEqualTo(createResponse.jsonPath().getString("name"))
-            },
-            Executable {
-                assertThat(response.jsonPath().getString("color"))
-                    .isNotEqualTo(createResponse.jsonPath().getString("color"))
-            },
-            Executable {
-                assertThat(response.jsonPath().getString("createdDate")).isNotNull()
-            },
-            Executable {
-                assertThat(response.jsonPath().getString("modifiedDate"))
-                    .isNotEqualTo(createResponse.jsonPath().getString("modifiedDate"))
-            }
-        )
-    }
-
-    private fun changeLine(createResponse: ExtractableResponse<Response>, lineRequest: LineRequest) {
-        RestAssured
-            .given().log().all()
-            .body(lineRequest)
+            .body(이호선)
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .`when`()
-            .put(headerLocation(createResponse))
+            .post("/lines")
             .then().log().all().extract()
+
+        fun 노선_데이터_확인(response: ExtractableResponse<Response>, color: String, line: String) {
+
+            assertThat(response.body().jsonPath().getString("color")).isEqualTo(color)
+            assertThat(response.body().jsonPath().getString("name")).isEqualTo(line)
+            assertThat(response.jsonPath().getString("createdDate")).isNotNull
+            assertThat(response.jsonPath().getString("modifiedDate")).isNotNull
+        }
+
+        fun 응답_확인(response: ExtractableResponse<Response>, httpStatus: Int) {
+            assertThat(response.statusCode()).isEqualTo(httpStatus)
+        }
+
+        fun 미디어타입_확인(response: ExtractableResponse<Response>, mediaType: String) {
+            assertThat(response.header("Content-Type")).isEqualTo(mediaType)
+        }
+
+        fun 노선_목록_검증(response: ExtractableResponse<Response>) {
+            response.jsonPath().getList(".",LineResponse::class.java)
+                .forEach {
+                    MatcherAssert.assertThat(it.id,
+                        CoreMatchers.anyOf(CoreMatchers.equalTo(1L), CoreMatchers.equalTo(2L),CoreMatchers.equalTo(3L)))
+                    MatcherAssert.assertThat(it.name,
+                        CoreMatchers.anyOf(CoreMatchers.containsString("일호선"),CoreMatchers.containsString("이호선"),CoreMatchers.containsString("칠호선")))
+                    MatcherAssert.assertThat(it.color,
+                        CoreMatchers.anyOf(CoreMatchers.containsString("초록색"),CoreMatchers.containsString("파란색"),CoreMatchers.containsString("연두색")))
+                    assertThat(it.createdDate).isNotNull
+                    assertThat(it.modifiedDate).isNotNull
+                }
+        }
+
+        fun headerLocation(createResponse: ExtractableResponse<Response>) =
+            createResponse.header("Location")
+
+        fun 노선_조회(createResponse: ExtractableResponse<Response>) =
+            RestAssured
+                .given().log().all()
+                .`when`()
+                .get(headerLocation(createResponse))
+                .then().log().all().extract()
+
+        fun 노선들_조회() = RestAssured
+            .given().log().all()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .`when`()
+            .get("/lines")
+            .then().log().all().extract()
+
+        fun 노선_수정_확인(createResponse: ExtractableResponse<Response>, response: ExtractableResponse<Response>) {
+            assertAll(
+                Executable {
+                    assertThat(response.jsonPath().getLong("id"))
+                        .isEqualTo(createResponse.jsonPath().getString("id").toLong())
+                },
+                Executable {
+                    assertThat(response.jsonPath().getString("name"))
+                        .isNotEqualTo(createResponse.jsonPath().getString("name"))
+                },
+                Executable {
+                    assertThat(response.jsonPath().getString("color"))
+                        .isNotEqualTo(createResponse.jsonPath().getString("color"))
+                },
+                Executable {
+                    assertThat(response.jsonPath().getString("createdDate")).isNotNull()
+                },
+                Executable {
+                    assertThat(response.jsonPath().getString("modifiedDate"))
+                        .isNotEqualTo(createResponse.jsonPath().getString("modifiedDate"))
+                }
+            )
+        }
+
+        fun 지하철_노선_수정(createResponse: ExtractableResponse<Response>, lineRequest: LineRequest) {
+            RestAssured
+                .given().log().all()
+                .body(lineRequest)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .`when`()
+                .put(headerLocation(createResponse))
+                .then().log().all().extract()
+        }
     }
 }
 
