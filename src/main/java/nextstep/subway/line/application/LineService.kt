@@ -4,6 +4,8 @@ import nextstep.subway.line.domain.Line
 import nextstep.subway.line.domain.LineRepository
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
+import nextstep.subway.section.domain.Sections
+import nextstep.subway.section.dto.SectionRequest
 import nextstep.subway.station.domain.StationRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -39,10 +41,21 @@ class LineService(private val lineRepository: LineRepository,
         return LineResponse.from(line)
     }
 
-    private fun findLine(id: Long) =
-        lineRepository.findById(id).orElseThrow { EntityNotFoundException("존재하지 않는 노선입니다.") }!!
-
     fun deleteLine(id: Long) {
         lineRepository.deleteById(id)
     }
+
+    fun saveSection(id: Long, reqeust: SectionRequest): LineResponse {
+        val line = findLine(id)
+        val upStation = findStation(reqeust.upStationId)
+        val downStation = findStation(reqeust.downStationId)
+
+        return line.sections.sections.add()
+    }
+
+    private fun findStation(stationId: Long) =
+        stationRepository.findById(stationId).orElseThrow { EntityNotFoundException("존재하지 않는 지하철입니다.") }
+
+    private fun findLine(id: Long) =
+        lineRepository.findById(id).orElseThrow { EntityNotFoundException("존재하지 않는 노선입니다.") }!!
 }
