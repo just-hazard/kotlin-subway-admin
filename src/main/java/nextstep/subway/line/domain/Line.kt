@@ -1,6 +1,7 @@
 package nextstep.subway.line.domain
 
 import nextstep.subway.common.BaseEntity
+import nextstep.subway.section.domain.Section
 import nextstep.subway.section.domain.Sections
 import nextstep.subway.station.domain.Station
 import javax.persistence.*
@@ -20,6 +21,11 @@ class Line(
     fun update(line: Line) {
         name = line.name
         color = line.color
+    }
+
+    fun addSection(section: Section) {
+        sections.sections.add(section)
+        section.line = this
     }
 
     constructor(name: String, color: String): this(0, name, color, Sections(mutableListOf()))
