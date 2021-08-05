@@ -24,7 +24,7 @@ class Line(
     }
 
     fun addSection(section: Section) {
-        sections.sections.add(section)
+        sections.validCheckAndAddSection(section)
         section.line = this
     }
 

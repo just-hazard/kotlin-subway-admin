@@ -5,7 +5,6 @@ import nextstep.subway.station.domain.Station
 import javax.persistence.CascadeType
 import javax.persistence.Embeddable
 import javax.persistence.OneToMany
-import kotlin.streams.toList
 
 @Embeddable
 class Sections(
@@ -24,4 +23,25 @@ class Sections(
         }
         return stations
     }
+
+    fun validCheckAndAddSection(section: Section) {
+        addDownStation(section)
+    }
+
+    // 하행역 등록
+    // 시나리오
+    // 의정부역 인천역 (기존)
+    // 의정부역 서울역
+    private fun addDownStation(section: Section) {
+        sections.stream().filter {
+            isSameStation(it.upStation, section.upStation)
+        }.findFirst().ifPresent {
+            it.changeDownStation(section.upStation, section.distance)
+        }
+    }
+
+    private fun isSameStation(
+        oldStation: Station,
+        newStation: Station,
+    ) = oldStation.name == newStation.name
 }

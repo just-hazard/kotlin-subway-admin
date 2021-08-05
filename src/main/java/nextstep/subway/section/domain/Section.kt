@@ -17,5 +17,29 @@ class Section (
     @ManyToOne
     var downStation: Station,
 
-    val distance: Int
-) : BaseEntity()
+    var distance: Int
+) : BaseEntity() {
+    fun changeDownStation(upStation: Station, distance: Int) {
+        changeDistance(distance)
+        this.upStation = upStation
+    }
+
+    private fun changeDistance(distance: Int) {
+        if(confirmDistanceZero()){
+            compareDistance(distance)
+            this.distance -= distance
+            return
+        }
+        this.distance = distance
+    }
+
+    private fun compareDistance(distance: Int) {
+        if(this.distance <= distance) {
+            throw IllegalArgumentException("기존 거리보다 더 멀 수 없습니다.")
+        }
+    }
+
+    private fun confirmDistanceZero(): Boolean {
+        return this.distance != 0
+    }
+}

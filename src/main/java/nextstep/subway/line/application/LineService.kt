@@ -14,7 +14,7 @@ import java.util.stream.Collectors.toList
 import javax.persistence.EntityNotFoundException
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 class LineService(private val lineRepository: LineRepository,
         private val stationRepository: StationRepository) {
 
@@ -25,27 +25,25 @@ class LineService(private val lineRepository: LineRepository,
         return LineResponse.from(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
     }
 
-    @Transactional(readOnly = true)
     fun findAll(): List<LineResponse> {
         return lineRepository.findAll().stream()
             .map { LineResponse.from(it!!) }.collect(toList())
     }
 
-    @Transactional(readOnly = true)
     fun findById(id: Long): LineResponse {
         return LineResponse.from(findLine(id))
     }
-
+    @Transactional(readOnly = false)
     fun changeLine(id: Long, request: LineRequest): LineResponse {
         val line = findLine(id)
         line.update(request.toLine())
         return LineResponse.from(line)
     }
-
+    @Transactional(readOnly = false)
     fun deleteLine(id: Long) {
         lineRepository.deleteById(id)
     }
-
+    @Transactional(readOnly = false)
     fun saveSection(id: Long, reqeust: SectionRequest) : LineResponse {
         val line = findLine(id)
         val upStation = findStation(reqeust.upStationId)
