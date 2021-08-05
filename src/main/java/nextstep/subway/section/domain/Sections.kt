@@ -26,17 +26,18 @@ class Sections(
 
     fun validCheckAndAddSection(section: Section) {
         addDownStation(section)
+        this.sections.add(section)
     }
 
     // 하행역 등록
     // 시나리오
-    // 의정부역 인천역 (기존)
-    // 의정부역 서울역
+    // 잠실역 건대입구역 (기존)
+    // 잠실역 종합운동장역
     private fun addDownStation(section: Section) {
         sections.stream().filter {
             isSameStation(it.upStation, section.upStation)
         }.findFirst().ifPresent {
-            it.changeDownStation(section.upStation, section.distance)
+            it.changeDownStation(section)
         }
     }
 

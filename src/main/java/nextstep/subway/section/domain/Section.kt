@@ -19,9 +19,14 @@ class Section (
 
     var distance: Int
 ) : BaseEntity() {
-    fun changeDownStation(upStation: Station, distance: Int) {
-        changeDistance(distance)
-        this.upStation = upStation
+    fun changeDownStation(newSection: Section) {
+        changeDistance(newSection.distance)
+        this.upStation = newSection.upStation
+//        val station = this.downStation
+//        this.downStation = newSection.downStation
+//        newSection.upStation = newSection.downStation
+//        newSection.downStation = station
+
     }
 
     private fun changeDistance(distance: Int) {
