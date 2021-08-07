@@ -21,11 +21,11 @@ class Section (
 ) : BaseEntity() {
     fun changeDownStation(newSection: Section) {
         changeDistance(newSection.distance)
-        this.upStation = newSection.upStation
-//        val station = this.downStation
-//        this.downStation = newSection.downStation
-//        newSection.upStation = newSection.downStation
-//        newSection.downStation = station
+        // 하행역 등록 (역과 역 사이)
+        val station = this.downStation
+        this.downStation = newSection.downStation
+        newSection.upStation = newSection.downStation
+        newSection.downStation = station
 
     }
 
