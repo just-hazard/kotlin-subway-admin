@@ -19,6 +19,12 @@ class Section (
 
     var distance: Int
 ) : BaseEntity() {
+    fun changeUpStation(newSection: Section) {
+        changeDistance(newSection.distance)
+        // 상행역 등록 (역과 역 사이)
+        this.downStation = newSection.upStation
+    }
+
     fun changeDownStation(newSection: Section) {
         changeDistance(newSection.distance)
         // 하행역 등록 (역과 역 사이)

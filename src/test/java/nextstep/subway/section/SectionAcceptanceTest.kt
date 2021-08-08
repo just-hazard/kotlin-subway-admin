@@ -82,7 +82,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
             val stations = response.jsonPath().getList("stations", StationResponse::class.java)
                 .stream().map {
                     it.name
-                }.toList<String>()
+                }.toList()
             assertThat(expectedStations).containsAll(stations)
         }
     }

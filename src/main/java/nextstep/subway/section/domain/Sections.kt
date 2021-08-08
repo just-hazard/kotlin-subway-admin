@@ -14,7 +14,7 @@ class Sections(
     var sections: MutableList<Section>
 ) {
     constructor(line: Line, upStation: Station, downStation: Station, distance: Int) : this(mutableListOf()) {
-        sections.add(Section(0,line, upStation, downStation, distance))
+        addSection(Section(0, line, upStation, downStation, distance))
     }
 
     fun getSortStations() : List<Station> {
@@ -40,14 +40,29 @@ class Sections(
     }
 
     fun validCheckAndAddSection(section: Section) {
+        addUpStation(section)
         addDownStation(section)
+        addSection(section)
+    }
+
+    private fun addSection(section: Section) {
         this.sections.add(section)
     }
 
+    // 상행역 등록
+    // 잠실역, 건대입구역
+    // 종합운동장역, 건대입구역
+    private fun addUpStation(section: Section) {
+        sections.stream().filter {
+            isSameStation(it.downStation, section.downStation)
+        }.findFirst().ifPresent {
+            it.changeUpStation(section)
+        }
+    }
+
     // 하행역 등록
-    // 시나리오
-    // 잠실역 건대입구역 (기존)
-    // 잠실역 종합운동장역
+    // 잠실역, 건대입구역
+    // 잠실역, 종합운동장역
     private fun addDownStation(section: Section) {
         sections.stream().filter {
             isSameStation(it.upStation, section.upStation)
