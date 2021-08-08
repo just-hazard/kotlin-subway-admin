@@ -13,6 +13,7 @@ import nextstep.subway.station.StationAcceptanceTest
 import nextstep.subway.station.dto.StationRequest
 import nextstep.subway.station.dto.StationResponse
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -75,14 +76,14 @@ class SectionAcceptanceTest : AcceptanceTest() {
         }
 
         private fun 노선에_구간_요청_확인(response: ExtractableResponse<Response>, httpStatus: HttpStatus) {
-            Assertions.assertThat(response.statusCode()).isEqualTo(httpStatus)
+            Assertions.assertThat(response.statusCode()).isEqualTo(httpStatus.value())
         }
         private fun 노선에_포함된_지하철_확인(response: ExtractableResponse<Response>, expectedStations: List<String>) {
-            val stations = response.jsonPath().getList("stations", SectionResponse::class.java)
+            val stations = response.jsonPath().getList("stations", StationResponse::class.java)
                 .stream().map {
                     it.name
-                }.toList()
-            Assertions.assertThat(stations).containsExactly(expectedStations.toString())
+                }.toList<String>()
+            assertThat(expectedStations).containsAll(stations)
         }
     }
 }
