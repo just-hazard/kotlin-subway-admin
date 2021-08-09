@@ -2,11 +2,9 @@ package nextstep.subway.section.domain
 
 import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
-import java.util.*
 import javax.persistence.CascadeType
 import javax.persistence.Embeddable
 import javax.persistence.OneToMany
-import kotlin.streams.toList
 
 @Embeddable
 class Sections(
@@ -40,9 +38,19 @@ class Sections(
     }
 
     fun validCheckAndAddSection(section: Section) {
+        addNewUpBoundLastStation(section)
         addUpStation(section)
         addDownStation(section)
         addSection(section)
+    }
+
+    private fun addNewUpBoundLastStation(section: Section) {
+        // 조건
+        // List 가장 앞쪽으로 와야한다 ( LinkedList 사용? )
+        // 중간에도 많이 빠질지?
+        if(this.sections.first().upStation == section.downStation) {
+            this.sections.add(0, section)
+        }
     }
 
     private fun addSection(section: Section) {
