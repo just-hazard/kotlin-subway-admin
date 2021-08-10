@@ -36,21 +36,27 @@ class Sections(
         }
         return it.upStation == stations.last()
     }
-
+    var confirmAddSection = false
     fun validCheckAndAddSection(section: Section) {
-        addNewUpBoundLastStation(section)
-        addUpStation(section)
-        addDownStation(section)
-        addSection(section)
+
+        when(true) {
+            addNewUpBoundLastStation(section) -> changeAddSection()
+            addUpStation(section) -> changeAddSection()
+            addDownStation(section) -> changeAddSection()
+        }
     }
 
-    private fun addNewUpBoundLastStation(section: Section) {
-        // 조건
-        // List 가장 앞쪽으로 와야한다 ( LinkedList 사용? )
-        // 중간에도 많이 빠질지?
+    private fun changeAddSection() {
+        this.confirmAddSection = true
+    }
+
+
+    private fun addNewUpBoundLastStation(section: Section) : Boolean {
         if(this.sections.first().upStation == section.downStation) {
             this.sections.add(0, section)
+            return true
         }
+        return false
     }
 
     private fun addSection(section: Section) {
@@ -60,23 +66,29 @@ class Sections(
     // 상행역 등록
     // 잠실역, 건대입구역
     // 종합운동장역, 건대입구역
-    private fun addUpStation(section: Section) {
+    private fun addUpStation(section: Section) : Boolean {
         sections.stream().filter {
             isSameStation(it.downStation, section.downStation)
         }.findFirst().ifPresent {
             it.changeUpStation(section)
+            addSection(section)
+            return@ifPresent
         }
+        return false
     }
 
     // 하행역 등록
     // 잠실역, 건대입구역
     // 잠실역, 종합운동장역
-    private fun addDownStation(section: Section) {
+    private fun addDownStation(section: Section) : Boolean {
         sections.stream().filter {
             isSameStation(it.upStation, section.upStation)
         }.findFirst().ifPresent {
             it.changeDownStation(section)
+            addSection(section)
+            return@ifPresent
         }
+        return false
     }
 
     private fun isSameStation(
