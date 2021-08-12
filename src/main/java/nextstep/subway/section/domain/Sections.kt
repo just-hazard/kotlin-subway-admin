@@ -12,7 +12,7 @@ class Sections(
     var sections: MutableList<Section>
 ) {
     constructor(line: Line, upStation: Station, downStation: Station, distance: Int) : this(mutableListOf()) {
-        addSection(Section(0, line, upStation, downStation, distance))
+        this.sections.add(Section(0, line, upStation, downStation, distance))
     }
 
     fun getSortStations() : List<Station> {
@@ -36,59 +36,58 @@ class Sections(
         }
         return it.upStation == stations.last()
     }
-    var confirmAddSection = false
+
+    private var confirmAddSection: Boolean = false
     fun validCheckAndAddSection(section: Section) {
 
-        when(true) {
-            addNewUpBoundLastStation(section) -> changeAddSection()
-            addUpStation(section) -> changeAddSection()
-            addDownStation(section) -> changeAddSection()
+        if(!confirmAddSection) {
+            addNewUpBoundLastStation(section)
+        }
+        if(!confirmAddSection) {
+            addUpStation(section)
+        }
+        if(!confirmAddSection) {
+            addDownStation(section)
         }
     }
 
-    private fun changeAddSection() {
-        this.confirmAddSection = true
-    }
-
-
-    private fun addNewUpBoundLastStation(section: Section) : Boolean {
+    private fun addNewUpBoundLastStation(section: Section) {
         if(this.sections.first().upStation == section.downStation) {
             this.sections.add(0, section)
-            return true
+            confirmCheckAddSection(true)
         }
-        return false
     }
 
     private fun addSection(section: Section) {
-        this.sections.add(section)
+        confirmCheckAddSection(this.sections.add(section))
+    }
+
+    private fun confirmCheckAddSection(registrationOrNot: Boolean) {
+        confirmAddSection = registrationOrNot
     }
 
     // 상행역 등록
     // 잠실역, 건대입구역
     // 종합운동장역, 건대입구역
-    private fun addUpStation(section: Section) : Boolean {
+    private fun addUpStation(section: Section) {
         sections.stream().filter {
             isSameStation(it.downStation, section.downStation)
         }.findFirst().ifPresent {
             it.changeUpStation(section)
             addSection(section)
-            return@ifPresent
         }
-        return false
     }
 
     // 하행역 등록
     // 잠실역, 건대입구역
     // 잠실역, 종합운동장역
-    private fun addDownStation(section: Section) : Boolean {
+    private fun addDownStation(section: Section) {
         sections.stream().filter {
             isSameStation(it.upStation, section.upStation)
         }.findFirst().ifPresent {
             it.changeDownStation(section)
             addSection(section)
-            return@ifPresent
         }
-        return false
     }
 
     private fun isSameStation(
