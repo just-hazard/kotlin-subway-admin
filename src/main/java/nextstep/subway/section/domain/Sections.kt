@@ -40,6 +40,8 @@ class Sections(
     private var confirmAddSection: Boolean = false
     fun validCheckAndAddSection(section: Section) {
 
+        makeSureItExistsSection(section)
+
         if(!confirmAddSection) {
             addNewUpBoundLastStation(section)
         }
@@ -51,6 +53,14 @@ class Sections(
         }
         if(!confirmAddSection) {
             addNewDOwnBoundLastStation(section)
+        }
+    }
+
+    private fun makeSureItExistsSection(section: Section) {
+        this.sections.stream().filter {
+            it.upStation == section.upStation && it.downStation == section.downStation
+        }.findFirst().ifPresent {
+            throw IllegalArgumentException("이미 존재하는 상하행역입니다.")
         }
     }
 
