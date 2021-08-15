@@ -49,7 +49,19 @@ class Sections(
         if(!confirmAddSection) {
             addDownStation(section)
         }
+        if(!confirmAddSection) {
+            addNewDOwnBoundLastStation(section)
+        }
     }
+
+    private fun addNewDOwnBoundLastStation(section: Section) {
+        if(this.sections.last().downStation == section.upStation) {
+            this.sections.add(newLastSectionIndex(), section)
+            confirmCheckAddSection(true)
+        }
+    }
+
+    private fun newLastSectionIndex() = sections.size
 
     private fun addNewUpBoundLastStation(section: Section) {
         if(this.sections.first().upStation == section.downStation) {
