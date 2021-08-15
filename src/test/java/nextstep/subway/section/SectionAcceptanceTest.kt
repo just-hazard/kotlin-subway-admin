@@ -84,6 +84,15 @@ class SectionAcceptanceTest : AcceptanceTest() {
         노선에_포함된_지하철_확인(response, listOf("종합운동장역", "잠실역", "건대입구역"))
     }
 
+    @Test
+    fun `이미 존재하는 상하행역 등록 (예외처리)`() {
+        // given when
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 건대입구역.id, 5));
+
+        // then
+        노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     companion object {
         private fun 지하철_구간_등록_요청(lineId: Long, request: SectionRequest): ExtractableResponse<Response> {
                     return RestAssured
