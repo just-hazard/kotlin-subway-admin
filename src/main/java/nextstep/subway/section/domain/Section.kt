@@ -16,8 +16,8 @@ class Section (
     var upStation: Station,
     @ManyToOne
     var downStation: Station,
-
-    var distance: Int
+    @Embedded
+    var distance: Distance
 ) : BaseEntity() {
     fun changeUpStation(newSection: Section) {
         changeDistance(newSection.distance)
@@ -32,25 +32,24 @@ class Section (
         this.downStation = newSection.downStation
         newSection.upStation = newSection.downStation
         newSection.downStation = station
-
     }
 
-    private fun changeDistance(distance: Int) {
+    private fun changeDistance(newSectionDistance: Distance) {
         if(confirmDistanceZero()){
-            compareDistance(distance)
-            this.distance -= distance
+            compareDistance(newSectionDistance)
+            this.distance.distanceCorrection(newSectionDistance)
             return
         }
-        this.distance = distance
+        this.distance = newSectionDistance
     }
 
-    private fun compareDistance(distance: Int) {
-        if(this.distance <= distance) {
+    private fun compareDistance(distance: Distance) {
+        if(this.distance.validConfirmNewDistance(distance)) {
             throw IllegalArgumentException("기존 거리보다 더 멀 수 없습니다.")
         }
     }
 
     private fun confirmDistanceZero(): Boolean {
-        return this.distance != 0
+        return distance.validConfirmGreaterThanZero()
     }
 }

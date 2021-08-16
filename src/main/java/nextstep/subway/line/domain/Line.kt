@@ -1,6 +1,7 @@
 package nextstep.subway.line.domain
 
 import nextstep.subway.common.BaseEntity
+import nextstep.subway.section.domain.Distance
 import nextstep.subway.section.domain.Section
 import nextstep.subway.section.domain.Sections
 import nextstep.subway.station.domain.Station
@@ -31,7 +32,7 @@ class Line(
     constructor(name: String, color: String): this(0, name, color, Sections(mutableListOf()))
 
     companion object {
-        fun of(name: String, color: String, upStation: Station, downStation: Station, distance: Int) : Line {
+        fun of(name: String, color: String, upStation: Station, downStation: Station, distance: Distance) : Line {
             val line = Line(0,name,color)
             line.sections = Sections(line, upStation, downStation, distance)
             return line

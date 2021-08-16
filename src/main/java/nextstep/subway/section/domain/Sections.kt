@@ -4,7 +4,6 @@ import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
 import javax.persistence.CascadeType
 import javax.persistence.Embeddable
-import javax.persistence.EntityNotFoundException
 import javax.persistence.OneToMany
 
 @Embeddable
@@ -12,7 +11,7 @@ class Sections(
     @OneToMany(mappedBy = "line", cascade = [CascadeType.ALL], orphanRemoval = true)
     var sections: MutableList<Section>
 ) {
-    constructor(line: Line, upStation: Station, downStation: Station, distance: Int) : this(mutableListOf()) {
+    constructor(line: Line, upStation: Station, downStation: Station, distance: Distance) : this(mutableListOf()) {
         this.sections.add(Section(0, line, upStation, downStation, distance))
     }
 

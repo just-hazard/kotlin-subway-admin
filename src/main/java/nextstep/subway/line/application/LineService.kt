@@ -4,6 +4,7 @@ import nextstep.subway.line.domain.Line
 import nextstep.subway.line.domain.LineRepository
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
+import nextstep.subway.section.domain.Distance
 import nextstep.subway.section.domain.Section
 import nextstep.subway.section.domain.Sections
 import nextstep.subway.section.dto.SectionRequest
@@ -22,7 +23,7 @@ class LineService(private val lineRepository: LineRepository,
         val upStation = stationRepository.findById(request.upStationId).orElseThrow { EntityNotFoundException("상행역이 존재하지 않습니다.") }
         val downStation = stationRepository.findById(request.downStationId).orElseThrow { EntityNotFoundException("하행역이 존재하지 않습니다.") }
 
-        return LineResponse.from(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, request.distance)))
+        return LineResponse.from(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, Distance(request.distance))))
     }
 
     fun findAll(): List<LineResponse> {
@@ -49,7 +50,7 @@ class LineService(private val lineRepository: LineRepository,
         val upStation = findStation(reqeust.upStationId)
         val downStation = findStation(reqeust.downStationId)
 
-        line.addSection(Section(0,line, upStation, downStation, reqeust.distance))
+        line.addSection(Section(0,line, upStation, downStation, Distance(reqeust.distance)))
 
         return LineResponse.from(line)
     }
