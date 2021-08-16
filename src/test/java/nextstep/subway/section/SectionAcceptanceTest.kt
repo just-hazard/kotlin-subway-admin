@@ -93,6 +93,19 @@ class SectionAcceptanceTest : AcceptanceTest() {
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @Test
+    fun `노선에 존재하지 않는 상하행역 (예외처리)`() {
+        // given
+        val 역삼역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("역삼역")).`as`(StationResponse::class.java)
+        val 강남역 = StationAcceptanceTest.지하철역_생성_요청(StationRequest("강남역")).`as`(StationResponse::class.java)
+
+        // when
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(역삼역.id, 강남역.id, 10));
+
+        // then
+        노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     companion object {
         private fun 지하철_구간_등록_요청(lineId: Long, request: SectionRequest): ExtractableResponse<Response> {
                     return RestAssured
