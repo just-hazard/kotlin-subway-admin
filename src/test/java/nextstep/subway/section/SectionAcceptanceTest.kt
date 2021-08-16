@@ -10,6 +10,7 @@ import nextstep.subway.line.dto.LineResponse
 import nextstep.subway.section.dto.SectionRequest
 import nextstep.subway.section.dto.SectionResponse
 import nextstep.subway.station.StationAcceptanceTest
+import nextstep.subway.station.domain.Station
 import nextstep.subway.station.dto.StationRequest
 import nextstep.subway.station.dto.StationResponse
 import org.assertj.core.api.Assertions
@@ -81,7 +82,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.OK)
-        노선에_포함된_지하철_확인(response, listOf("종합운동장역", "잠실역", "건대입구역"))
+        노선에_포함된_지하철_확인(response, listOf("잠실역", "건대입구역", "종합운동장역"))
     }
 
     @Test
@@ -125,7 +126,8 @@ class SectionAcceptanceTest : AcceptanceTest() {
                 .stream().map {
                     it.name
                 }.toList()
-            assertThat(expectedStations).containsAll(stations)
+
+            assertThat(expectedStations).isEqualTo(stations)
         }
     }
 }
