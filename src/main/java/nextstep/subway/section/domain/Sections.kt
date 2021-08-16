@@ -4,6 +4,7 @@ import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
 import javax.persistence.CascadeType
 import javax.persistence.Embeddable
+import javax.persistence.EntityNotFoundException
 import javax.persistence.OneToMany
 
 @Embeddable
@@ -39,7 +40,7 @@ class Sections(
 
     private var confirmAddSection: Boolean = false
     fun validCheckAndAddSection(section: Section) {
-
+        nonExistentStation(section)
         makeSureItExistsSection(section)
 
         if(!confirmAddSection) {
@@ -53,6 +54,13 @@ class Sections(
         }
         if(!confirmAddSection) {
             addNewDOwnBoundLastStation(section)
+        }
+    }
+
+    private fun nonExistentStation(section: Section) {
+        val stations = getSortStations()
+        if (!stations.contains(section.upStation) && !stations.contains(section.downStation)) {
+            throw IllegalArgumentException("존재하지 않는 상하행역입니다.")
         }
     }
 
