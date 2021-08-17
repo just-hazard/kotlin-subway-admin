@@ -116,6 +116,19 @@ class SectionAcceptanceTest : AcceptanceTest() {
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
+    @Test
+    fun `구간 삭제`() {
+
+        // given
+        지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 종합운동장역.id, 5));
+
+        // when
+        val response = 구간_삭제_요청(이호선.id, 종합운동장역.id)
+
+        // then
+        노선에_구간_요청_확인(response, HttpStatus.OK)
+    }
+
     companion object {
         private fun 지하철_구간_등록_요청(lineId: Long, request: SectionRequest): ExtractableResponse<Response> {
                     return RestAssured
@@ -125,6 +138,15 @@ class SectionAcceptanceTest : AcceptanceTest() {
                         .`when`()
                         .post("/lines/$lineId/sections")
                         .then().log().all().extract()
+        }
+
+        private fun 구간_삭제_요청(lineId: Long, stationId: Long): ExtractableResponse<Response>  {
+            return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .`when`()
+                .delete("/lines/$lineId/sections?stationId=$stationId")
+                .then().log().all().extract()
         }
 
         private fun 노선에_구간_요청_확인(response: ExtractableResponse<Response>, httpStatus: HttpStatus) {
