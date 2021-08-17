@@ -4,6 +4,7 @@ import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
 import javax.persistence.CascadeType
 import javax.persistence.Embeddable
+import javax.persistence.EntityNotFoundException
 import javax.persistence.OneToMany
 
 @Embeddable
@@ -135,10 +136,18 @@ class Sections(
         // 일치하는 하행역 검색 후 섹션 담기
         // 상행역을 기준으로 일치하는 섹션을 찾은 후 거리 및 상행역 교체
         // 기존의 삭제하려던 섹션 삭제
-        sections.stream().filter {
-            it.downStation == station
-        }
+        val scheduledToBeDeletedSection = findSection(station)
+        sections[findNextSectionIndex(scheduledToBeDeletedSection)]
+    }
 
+    private fun findNextSectionIndex(scheduledToBeDeletedSection: Section) : Int {
+        return sections.indexOf(scheduledToBeDeletedSection) + 1
+    }
+
+    private fun findSection(station: Station) = sections.stream().filter {
+        it.downStation.isSameStation(station)
+    }.findFirst().orElseThrow {
+        throw EntityNotFoundException("해당 지하철역이 존재하지 않습니다.")
     }
 
     private fun validCheckSectionOnlyOne() {

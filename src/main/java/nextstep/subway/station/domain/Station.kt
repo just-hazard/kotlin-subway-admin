@@ -14,5 +14,9 @@ class Station (
     var name: String,
 
     ) : BaseEntity() {
-        constructor(name: String) : this(0, name)
+    fun isSameStation(station: Station) : Boolean {
+        return this.name == station.name
+    }
+
+    constructor(name: String) : this(0, name)
     }
