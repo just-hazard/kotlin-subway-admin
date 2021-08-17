@@ -123,4 +123,12 @@ class Sections(
         oldStation: Station,
         newStation: Station,
     ) = oldStation.name == newStation.name
+
+    fun removeSection(station: Station) {
+        // 예외 케이스 Section Size가 하나일 때 삭제 요청 시 예외
+        // 시나리오 정리
+        // 일치하는 하행역 검색 후 섹션 담기
+        // 상행역을 기준으로 일치하는 섹션을 찾은 후 거리 및 상행역 교체
+        // 기존의 삭제하려던 섹션 삭제
+    }
 }

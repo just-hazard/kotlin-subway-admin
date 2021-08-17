@@ -6,7 +6,6 @@ import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
 import nextstep.subway.section.domain.Distance
 import nextstep.subway.section.domain.Section
-import nextstep.subway.section.domain.Sections
 import nextstep.subway.section.dto.SectionRequest
 import nextstep.subway.station.domain.StationRepository
 import org.springframework.stereotype.Service
@@ -51,6 +50,16 @@ class LineService(private val lineRepository: LineRepository,
         val downStation = findStation(reqeust.downStationId)
 
         line.addSection(Section(0,line, upStation, downStation, Distance(reqeust.distance)))
+
+        return LineResponse.from(line)
+    }
+
+    @Transactional(readOnly = false)
+    fun deleteSection(lineId: Long, stationId: Long): LineResponse {
+        val line = findLine(lineId)
+        val station = findStation(stationId)
+
+        line.removeSectionMessage(station)
 
         return LineResponse.from(line)
     }

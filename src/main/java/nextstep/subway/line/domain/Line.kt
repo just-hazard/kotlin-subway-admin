@@ -29,6 +29,10 @@ class Line(
         section.line = this
     }
 
+    fun removeSectionMessage(station: Station) {
+        this.sections.removeSection(station)
+    }
+
     constructor(name: String, color: String): this(0, name, color, Sections(mutableListOf()))
 
     companion object {

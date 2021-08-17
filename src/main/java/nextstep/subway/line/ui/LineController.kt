@@ -4,7 +4,6 @@ import nextstep.subway.line.application.LineService
 import nextstep.subway.line.dto.LineRequest
 import nextstep.subway.line.dto.LineResponse
 import nextstep.subway.section.dto.SectionRequest
-import nextstep.subway.section.dto.SectionResponse
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -45,4 +44,10 @@ class LineController(private val lineService: LineService) {
     fun addSection(@PathVariable id: Long, @RequestBody reqeust: SectionRequest): ResponseEntity<LineResponse> {
         return ResponseEntity.ok().body(lineService.saveSection(id, reqeust))
     }
+
+    @DeleteMapping(value = ["/{lineId}/sections"])
+    fun deleteSection(@PathVariable lineId: Long, @RequestParam stationId: Long) : ResponseEntity<LineResponse> {
+        return ResponseEntity.ok().body(lineService.deleteSection(lineId, stationId))
+    }
+
 }
