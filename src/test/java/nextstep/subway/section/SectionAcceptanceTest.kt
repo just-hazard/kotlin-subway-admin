@@ -120,7 +120,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     fun `구간 삭제`() {
 
         // given
-        지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 종합운동장역.id, 5));
+        지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 종합운동장역.id, 5))
 
         // when
         val response = 구간_삭제_요청(이호선.id, 종합운동장역.id)

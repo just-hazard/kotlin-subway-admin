@@ -52,4 +52,9 @@ class Section (
     private fun confirmDistanceZero(): Boolean {
         return distance.validConfirmGreaterThanZero()
     }
+
+    fun changeUpStationAndDistance(scheduledToBeDeletedSection: Section) {
+        this.upStation = scheduledToBeDeletedSection.upStation
+        this.distance.plusDistance(scheduledToBeDeletedSection.distance)
+    }
 }

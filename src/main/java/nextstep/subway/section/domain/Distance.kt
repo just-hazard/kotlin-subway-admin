@@ -19,4 +19,8 @@ data class Distance(var distance: Int) {
     fun validConfirmGreaterThanZero() : Boolean {
         return this.distance > DISTANCE_ZERO
     }
+
+    fun plusDistance(distance: Distance) {
+        this.distance += distance.distance
+    }
 }

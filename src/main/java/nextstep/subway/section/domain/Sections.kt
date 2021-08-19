@@ -129,6 +129,9 @@ class Sections(
         newStation: Station,
     ) = oldStation.name == newStation.name
 
+
+    // 잠실 종합
+    // 종합 건대
     fun removeSection(station: Station) {
         // 예외 케이스 Section Size가 하나일 때 삭제 요청 시 예외
         validCheckSectionOnlyOne()
@@ -137,7 +140,8 @@ class Sections(
         // 상행역을 기준으로 일치하는 섹션을 찾은 후 거리 및 상행역 교체
         // 기존의 삭제하려던 섹션 삭제
         val scheduledToBeDeletedSection = findSection(station)
-        sections[findNextSectionIndex(scheduledToBeDeletedSection)]
+        sections[findNextSectionIndex(scheduledToBeDeletedSection)].changeUpStationAndDistance(scheduledToBeDeletedSection)
+        sections.remove(scheduledToBeDeletedSection)
     }
 
     private fun findNextSectionIndex(scheduledToBeDeletedSection: Section) : Int {
