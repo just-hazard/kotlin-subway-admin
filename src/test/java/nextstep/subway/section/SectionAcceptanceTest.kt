@@ -129,6 +129,16 @@ class SectionAcceptanceTest : AcceptanceTest() {
         노선에_구간_요청_확인(response, HttpStatus.OK)
     }
 
+    @Test
+    fun `구간 1개일 때 삭제요청 시 예외처리`() {
+
+        // given when
+        val response = 구간_삭제_요청(이호선.id, 건대입구역.id)
+
+        // then
+        노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     companion object {
         private fun 지하철_구간_등록_요청(lineId: Long, request: SectionRequest): ExtractableResponse<Response> {
                     return RestAssured
