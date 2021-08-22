@@ -1,5 +1,6 @@
 package nextstep.subway.line.application
 
+import nextstep.subway.common.ErrorMessage
 import nextstep.subway.line.domain.Line
 import nextstep.subway.line.domain.LineRepository
 import nextstep.subway.line.dto.LineRequest
@@ -65,8 +66,8 @@ class LineService(private val lineRepository: LineRepository,
     }
 
     private fun findStation(stationId: Long) =
-        stationRepository.findById(stationId).orElseThrow { EntityNotFoundException("존재하지 않는 지하철입니다.") }!!
+        stationRepository.findById(stationId).orElseThrow { EntityNotFoundException(ErrorMessage.NON_EXISTENT_STATION) }!!
 
     private fun findLine(id: Long) =
-        lineRepository.findById(id).orElseThrow { EntityNotFoundException("존재하지 않는 노선입니다.") }!!
+        lineRepository.findById(id).orElseThrow { EntityNotFoundException(ErrorMessage.NON_EXISTENT_LINE) }!!
 }
