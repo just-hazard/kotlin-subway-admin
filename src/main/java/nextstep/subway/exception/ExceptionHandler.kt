@@ -23,4 +23,9 @@ class ExceptionHandler {
     fun emptyResultDataAccessException() : ResponseEntity<HttpStatus> {
         return ResponseEntity.noContent().build()
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun illegalArgumentException(message: IllegalArgumentException) : ResponseEntity<Any>{
+        return ResponseEntity<Any>(message.message?.let { ApiError(it) }, HttpStatus.INTERNAL_SERVER_ERROR)
+    }
 }

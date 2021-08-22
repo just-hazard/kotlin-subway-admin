@@ -1,5 +1,6 @@
 package nextstep.subway.section.domain
 
+import nextstep.subway.common.ErrorMessage
 import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
 import javax.persistence.CascadeType
@@ -67,7 +68,7 @@ class Sections(
     private fun nonExistentStation(section: Section) {
         val stations = getSortStations()
         if (!stations.contains(section.upStation) && !stations.contains(section.downStation)) {
-            throw IllegalArgumentException("존재하지 않는 상하행역입니다.")
+            throw IllegalArgumentException(ErrorMessage.NON_EXISTENT_SECTION)
         }
     }
 
@@ -75,7 +76,7 @@ class Sections(
         this.sections.stream().filter {
             it.upStation == section.upStation && it.downStation == section.downStation
         }.findFirst().ifPresent {
-            throw IllegalArgumentException("이미 존재하는 상하행역입니다.")
+            throw IllegalArgumentException(ErrorMessage.EXISTENT_SECTION)
         }
     }
 
@@ -160,7 +161,7 @@ class Sections(
 
     private fun validCheckSectionOnlyOne() {
         if(sections.size < REMOVE_SECTION_SIZE) {
-            throw IllegalArgumentException("존재하는 상하행역이 하나뿐이라 삭제할 수 없습니다.")
+            throw IllegalArgumentException(ErrorMessage.CAN_NOT_REMOVE_SECTION)
         }
     }
 }

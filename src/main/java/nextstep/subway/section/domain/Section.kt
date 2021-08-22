@@ -1,6 +1,7 @@
 package nextstep.subway.section.domain
 
 import nextstep.subway.common.BaseEntity
+import nextstep.subway.common.ErrorMessage
 import nextstep.subway.line.domain.Line
 import nextstep.subway.station.domain.Station
 import javax.persistence.*
@@ -45,7 +46,7 @@ class Section (
 
     private fun compareDistance(distance: Distance) {
         if(this.distance.validConfirmNewDistance(distance)) {
-            throw IllegalArgumentException("기존 거리보다 더 멀 수 없습니다.")
+            throw IllegalArgumentException(ErrorMessage.DISTANCE_OVER)
         }
     }
 
