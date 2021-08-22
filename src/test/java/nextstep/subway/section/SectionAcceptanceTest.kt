@@ -53,18 +53,21 @@ class SectionAcceptanceTest : AcceptanceTest() {
     fun `역과 역 사이에 새로운 역을 등록 (상행역)`() {
 
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 종합운동장역.id, 5));
+        지하철_구간_등록_요청(이호선.id, SectionRequest(종합운동장역.id, 역삼역.id, 5))
+        지하철_구간_등록_요청(이호선.id, SectionRequest(역삼역.id, 강남역.id, 5))
+        지하철_구간_등록_요청(이호선.id, SectionRequest(강남역.id, 서울대입구역.id, 5))
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 종합운동장역.id, 5))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.OK)
-        노선에_포함된_지하철_확인(response, listOf("건대입구역", "잠실역", "종합운동장역"))
+        노선에_포함된_지하철_확인(response, listOf("건대입구역", "잠실역", "종합운동장역", "역삼역", "강남역", "서울대입구역"))
     }
 
     @Test
     fun `역과 역 사이에 새로운 역을 등록 (하행역)`() {
 
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 잠실역.id, 5));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 잠실역.id, 5))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.OK)
@@ -74,7 +77,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     @Test
     fun `새로운 상행역 종점 등록`() {
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 건대입구역.id, 5));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(잠실역.id, 건대입구역.id, 5))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.OK)
@@ -84,7 +87,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     @Test
     fun `새로운 하행역 종점 등록`() {
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(종합운동장역.id, 잠실역.id, 5));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(종합운동장역.id, 잠실역.id, 5))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.OK)
@@ -94,7 +97,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     @Test
     fun `기존 상하행역 길이보다 크거나 같을 경우 (예외처리)`() {
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 잠실역.id, 15));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 잠실역.id, 15))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -103,7 +106,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     @Test
     fun `이미 존재하는 상하행역 등록 (예외처리)`() {
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 종합운동장역.id, 5));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(건대입구역.id, 종합운동장역.id, 5))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
@@ -113,7 +116,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
     fun `노선에 존재하지 않는 상하행역 (예외처리)`() {
 
         // given when
-        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(역삼역.id, 강남역.id, 10));
+        val response = 지하철_구간_등록_요청(이호선.id, SectionRequest(역삼역.id, 강남역.id, 10))
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)

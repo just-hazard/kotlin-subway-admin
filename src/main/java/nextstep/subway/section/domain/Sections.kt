@@ -57,8 +57,10 @@ class Sections(
             addDownStation(section)
         }
         if(!confirmAddSection) {
-            addNewDOwnBoundLastStation(section)
+            addNewDownBoundLastStation(section)
         }
+
+        confirmAddSection = false
     }
 
     private fun nonExistentStation(section: Section) {
@@ -76,7 +78,7 @@ class Sections(
         }
     }
 
-    private fun addNewDOwnBoundLastStation(section: Section) {
+    private fun addNewDownBoundLastStation(section: Section) {
         if(this.sections.last().downStation == section.upStation) {
             this.sections.add(newLastSectionIndex(), section)
             confirmCheckAddSection(true)
@@ -92,8 +94,9 @@ class Sections(
         }
     }
 
-    private fun addSection(section: Section) {
-        confirmCheckAddSection(this.sections.add(section))
+    private fun addSection(index: Int, section: Section) {
+        this.sections.add(index, section)
+        confirmCheckAddSection(true)
     }
 
     private fun confirmCheckAddSection(registrationOrNot: Boolean) {
@@ -108,7 +111,7 @@ class Sections(
             isSameStation(it.downStation, section.downStation)
         }.findFirst().ifPresent {
             it.changeUpStation(section)
-            addSection(section)
+            addSection(sections.indexOf(it), section)
         }
     }
 
@@ -120,7 +123,7 @@ class Sections(
             isSameStation(it.upStation, section.upStation)
         }.findFirst().ifPresent {
             it.changeDownStation(section)
-            addSection(section)
+            addSection(sections.indexOf(it), section)
         }
     }
 
