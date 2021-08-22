@@ -156,7 +156,7 @@ class Sections(
     private fun findSection(station: Station) = sections.stream().filter {
         it.downStation.isSameStation(station)
     }.findFirst().orElseThrow {
-        throw EntityNotFoundException("해당 지하철역이 존재하지 않습니다.")
+        throw EntityNotFoundException(ErrorMessage.NON_EXISTENT_STATION)
     }
 
     private fun validCheckSectionOnlyOne() {
