@@ -65,4 +65,6 @@ This project is [MIT](https://github.com/next-step/atdd-subway-admin/blob/master
   * 역과 역 사이에 새로운 역 등록 시 기존 길이보다 크거나 같으면 예외
   * 상행역과 하행역이 이미 모두 등록되어 있다면 추가 불가
   * 둘다 없어도 추가 불가 (Cascade 전략 어떻게 가져갈지 고민)
-  * 
+
+* 의문점
+  * hibernate는 정말 linkedList 자료구조를 지원 안하는 걸까? 왜 not supported?
