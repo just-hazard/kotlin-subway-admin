@@ -14,6 +14,7 @@ class Sections(
 ) {
     companion object {
         private const val REMOVE_SECTION_SIZE = 2
+        private const val INDEX_INCREASE = 1
     }
 
     constructor(line: Line, upStation: Station, downStation: Station, distance: Distance) : this(mutableListOf()) {
@@ -95,7 +96,7 @@ class Sections(
     }
 
     private fun addSection(index: Int, section: Section) {
-        this.sections.add(index, section)
+        this.sections.add(index + INDEX_INCREASE, section)
         confirmCheckAddSection(true)
     }
 
@@ -148,7 +149,7 @@ class Sections(
     }
 
     private fun findNextSectionIndex(scheduledToBeDeletedSection: Section) : Int {
-        return sections.indexOf(scheduledToBeDeletedSection) + 1
+        return sections.indexOf(scheduledToBeDeletedSection) + INDEX_INCREASE
     }
 
     private fun findSection(station: Station) = sections.stream().filter {
