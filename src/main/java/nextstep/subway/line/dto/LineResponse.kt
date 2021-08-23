@@ -19,7 +19,7 @@ class LineResponse(
         fun from(line: Line): LineResponse {
             val stations = line.sections.getSortStations()
             return LineResponse(line.id, line.name, line.color, line.createdDate, line.modifiedDate, convertStationAtStationResponse(stations))
-        }
+    }
 
         private fun convertStationAtStationResponse(stations: List<Station>) =
             stations.stream().map {

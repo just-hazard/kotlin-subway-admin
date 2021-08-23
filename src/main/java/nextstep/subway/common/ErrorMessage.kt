@@ -2,6 +2,8 @@ package nextstep.subway.common
 
 class ErrorMessage {
     companion object {
+        const val NON_EXISTENT_UP_STATION = "상행역이 존재하지 않습니다."
+        const val NON_EXISTENT_DOWN_STATION = "하행역이 존재하지 않습니다."
         const val NON_EXISTENT_LINE = "해당 노선이 존재하지 않습니다."
         const val DISTANCE_OVER = "기존 거리보다 더 멀 수 없습니다."
         const val NON_EXISTENT_SECTION = "존재하지 않는 상하행역입니다."

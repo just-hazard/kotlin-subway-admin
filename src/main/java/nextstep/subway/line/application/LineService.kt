@@ -20,10 +20,11 @@ class LineService(private val lineRepository: LineRepository,
         private val stationRepository: StationRepository) {
 
     fun saveLine(request: LineRequest): LineResponse {
-        val upStation = stationRepository.findById(request.upStationId).orElseThrow { EntityNotFoundException("상행역이 존재하지 않습니다.") }
-        val downStation = stationRepository.findById(request.downStationId).orElseThrow { EntityNotFoundException("하행역이 존재하지 않습니다.") }
+        val upStation = findStation(request.upStationId, ErrorMessage.NON_EXISTENT_UP_STATION)
+        val downStation = findStation(request.downStationId, ErrorMessage.NON_EXISTENT_DOWN_STATION)
 
-        return LineResponse.from(lineRepository.save(Line.of(request.name, request.color, upStation!!, downStation!!, Distance(request.distance))))
+        return LineResponse.from(lineRepository.save(Line.of(request.name, request.color,
+            upStation, downStation, Distance(request.distance))))
     }
 
     fun findAll(): List<LineResponse> {
@@ -47,8 +48,8 @@ class LineService(private val lineRepository: LineRepository,
     @Transactional(readOnly = false)
     fun saveSection(id: Long, reqeust: SectionRequest) : LineResponse {
         val line = findLine(id)
-        val upStation = findStation(reqeust.upStationId)
-        val downStation = findStation(reqeust.downStationId)
+        val upStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
+        val downStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
 
         line.addSection(Section(0,line, upStation, downStation, Distance(reqeust.distance)))
 
@@ -58,15 +59,15 @@ class LineService(private val lineRepository: LineRepository,
     @Transactional(readOnly = false)
     fun deleteSection(lineId: Long, stationId: Long): LineResponse {
         val line = findLine(lineId)
-        val station = findStation(stationId)
+        val station = findStation(stationId, ErrorMessage.NON_EXISTENT_STATION)
 
         line.removeSectionMessage(station)
 
         return LineResponse.from(line)
     }
 
-    private fun findStation(stationId: Long) =
-        stationRepository.findById(stationId).orElseThrow { EntityNotFoundException(ErrorMessage.NON_EXISTENT_STATION) }!!
+    private fun findStation(stationId: Long, errorMessage: String) =
+        stationRepository.findById(stationId).orElseThrow { EntityNotFoundException(errorMessage) }!!
 
     private fun findLine(id: Long) =
         lineRepository.findById(id).orElseThrow { EntityNotFoundException(ErrorMessage.NON_EXISTENT_LINE) }!!
