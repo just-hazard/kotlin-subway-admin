@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException
 class LineService(private val lineRepository: LineRepository,
         private val stationRepository: StationRepository) {
 
+    @Transactional(readOnly = false)
     fun saveLine(request: LineRequest): LineResponse {
         val upStation = findStation(request.upStationId, ErrorMessage.NON_EXISTENT_UP_STATION)
         val downStation = findStation(request.downStationId, ErrorMessage.NON_EXISTENT_DOWN_STATION)
@@ -35,16 +36,19 @@ class LineService(private val lineRepository: LineRepository,
     fun findById(id: Long): LineResponse {
         return LineResponse.from(findLine(id))
     }
+
     @Transactional(readOnly = false)
     fun changeLine(id: Long, request: LineRequest): LineResponse {
         val line = findLine(id)
         line.update(request.toLine())
         return LineResponse.from(line)
     }
+
     @Transactional(readOnly = false)
     fun deleteLine(id: Long) {
         lineRepository.deleteById(id)
     }
+
     @Transactional(readOnly = false)
     fun saveSection(id: Long, reqeust: SectionRequest) : LineResponse {
         val line = findLine(id)
