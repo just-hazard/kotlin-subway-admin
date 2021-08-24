@@ -10,7 +10,7 @@ import javax.persistence.*
 class Section (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    var id: Long,
+    var id: Long = 0,
     @ManyToOne
     var line: Line,
     @ManyToOne
@@ -21,7 +21,7 @@ class Section (
     var distance: Distance
 ) : BaseEntity() {
 
-    constructor() : this()
+    constructor() : this(0, )
 
     fun changeUpStation(newSection: Section) {
         changeDistance(newSection.distance)

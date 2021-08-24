@@ -1,6 +1,7 @@
 package nextstep.subway.line.domain
 
 import nextstep.subway.common.BaseEntity
+import nextstep.subway.line.application.LineService
 import nextstep.subway.section.domain.Distance
 import nextstep.subway.section.domain.Section
 import nextstep.subway.section.domain.Sections
