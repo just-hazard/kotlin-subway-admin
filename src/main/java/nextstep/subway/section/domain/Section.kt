@@ -30,6 +30,10 @@ class Section (
     fun changeDownStation(newSection: Section) {
         changeDistance(newSection.distance)
         // 하행역 등록 (역과 역 사이)
+        changeNewDownStation(newSection)
+    }
+
+    private fun changeNewDownStation(newSection: Section) {
         val station = this.downStation
         this.downStation = newSection.downStation
         newSection.upStation = newSection.downStation
