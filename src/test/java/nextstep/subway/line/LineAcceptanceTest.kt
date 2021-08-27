@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.function.Executable
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import java.util.stream.Collectors
 import kotlin.streams.toList
 
 @DisplayName("지하철 노선 관련 기능")
