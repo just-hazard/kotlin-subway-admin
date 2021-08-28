@@ -66,7 +66,6 @@ class LineService(private val lineRepository: LineRepository,
         val station = findStation(stationId, ErrorMessage.NON_EXISTENT_STATION)
 
         line.removeSectionMessage(station)
-
         return LineResponse.from(line)
     }
 
