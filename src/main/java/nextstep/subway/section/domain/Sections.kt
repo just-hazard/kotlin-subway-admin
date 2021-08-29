@@ -19,7 +19,7 @@ class Sections(
     }
 
     constructor(line: Line, upStation: Station, downStation: Station, distance: Distance) : this(mutableListOf()) {
-        this.sections.add(Section(0, line, upStation, downStation, distance))
+        this.sections.add(Section(line, upStation, downStation, distance))
     }
 
     fun getSortStations() : List<Station> {

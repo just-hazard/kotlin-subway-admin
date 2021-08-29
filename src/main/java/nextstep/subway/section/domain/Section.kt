@@ -8,9 +8,6 @@ import javax.persistence.*
 
 @Entity
 class Section (
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    var id: Long = 0,
     @ManyToOne
     var line: Line,
     @ManyToOne
@@ -20,6 +17,10 @@ class Section (
     @Embedded
     var distance: Distance
 ) : BaseEntity() {
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    var id: Long = 0
 
     fun changeUpStation(newSection: Section) {
         changeDistance(newSection.distance)

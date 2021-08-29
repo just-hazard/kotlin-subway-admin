@@ -55,7 +55,7 @@ class LineService(private val lineRepository: LineRepository,
         val upStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
         val downStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
 
-        line.addSection(Section(0, line, upStation, downStation, Distance(reqeust.distance)))
+        line.addSection(Section(line, upStation, downStation, Distance(reqeust.distance)))
 
         return LineResponse.from(line)
     }
