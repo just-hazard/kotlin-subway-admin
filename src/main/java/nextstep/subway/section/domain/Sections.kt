@@ -46,7 +46,6 @@ class Sections(
 
     private var confirmAddSection: Boolean = false
     fun validCheckAndAddSection(section: Section) {
-        val beforeSections = sections
 
         nonExistentStation(section)
         makeSureItExistsSection(section)

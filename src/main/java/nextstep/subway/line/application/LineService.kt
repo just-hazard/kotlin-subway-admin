@@ -52,8 +52,8 @@ class LineService(private val lineRepository: LineRepository,
     @Transactional(readOnly = false)
     fun saveSection(id: Long, reqeust: SectionRequest) : LineResponse {
         val line = findLine(id)
-        val upStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
-        val downStation = findStation(id, ErrorMessage.NON_EXISTENT_STATION)
+        val upStation = findStation(reqeust.upStationId, ErrorMessage.NON_EXISTENT_STATION)
+        val downStation = findStation(reqeust.downStationId, ErrorMessage.NON_EXISTENT_STATION)
 
         line.addSection(Section(line, upStation, downStation, Distance(reqeust.distance)))
 
