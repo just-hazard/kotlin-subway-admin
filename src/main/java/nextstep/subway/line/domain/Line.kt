@@ -10,15 +10,16 @@ import javax.persistence.*
 
 @Entity
 class Line(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
     @Column(unique = true)
     var name: String,
     var color: String,
     @Embedded
     var sections: Sections = Sections(mutableListOf())
 ) : BaseEntity() {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0
 
     fun update(line: Line) {
         name = line.name
@@ -34,11 +35,11 @@ class Line(
         this.sections.removeSection(station)
     }
 
-    constructor(name: String, color: String): this(0, name, color, Sections(mutableListOf()))
+    constructor(name: String, color: String): this(name, color, Sections(mutableListOf()))
 
     companion object {
         fun of(name: String, color: String, upStation: Station, downStation: Station, distance: Distance) : Line {
-            val line = Line(0,name,color)
+            val line = Line(name,color)
             line.sections = Sections(line, upStation, downStation, distance)
             return line
         }
