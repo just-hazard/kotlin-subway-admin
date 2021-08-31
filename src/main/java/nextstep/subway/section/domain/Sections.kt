@@ -136,8 +136,8 @@ class Sections(
     ) = oldStation.name == newStation.name
 
 
+    // 건대 잠실
     // 잠실 종합
-    // 종합 건대
     fun removeSection(station: Station) {
         // 예외 케이스 Section Size가 하나일 때 삭제 요청 시 예외
         validCheckSectionOnlyOne()
