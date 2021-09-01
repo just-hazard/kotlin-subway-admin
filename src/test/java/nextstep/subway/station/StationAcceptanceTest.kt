@@ -40,37 +40,31 @@ class StationAcceptanceTest : AcceptanceTest() {
         Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value())
     }
 
-    /// given
-    @get:Test
-    @get:DisplayName("지하철역을 조회한다.")
-    val stations: Unit
+    @Test
+    @DisplayName("지하철역을 조회한다.")
+    fun selectStations() {
+        /// given
+        val createResponse1 = 지하철역_생성_요청(StationRequest("강남역"))
+        val createResponse2 = 지하철역_생성_요청(StationRequest("역삼역"))
 
-    // when
+        // when
+        val response = RestAssured.given().log().all()
+            .`when`()["/stations"]
+            .then().log().all()
+            .extract()
 
         // then
-        get() {
-            /// given
-            val createResponse1 = 지하철역_생성_요청(StationRequest("강남역"))
-            val createResponse2 = 지하철역_생성_요청(StationRequest("역삼역"))
-
-            // when
-            val response = RestAssured.given().log().all()
-                .`when`()["/stations"]
-                .then().log().all()
-                .extract()
-
-            // then
-            Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
-            val expectedLineIds = Arrays.asList(createResponse1, createResponse2).stream()
-                .map { it: ExtractableResponse<Response?> ->
-                    it.header("Location").split("/").toTypedArray()[2].toLong()
-                }
-                .collect(Collectors.toList())
-            val resultLineIds = response.jsonPath().getList(".", StationResponse::class.java).stream()
-                .map { it: StationResponse -> it.id }
-                .collect(Collectors.toList())
-            Assertions.assertThat(resultLineIds).containsAll(expectedLineIds)
-        }
+        Assertions.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        val expectedLineIds = Arrays.asList(createResponse1, createResponse2).stream()
+            .map {
+                it.header("Location").split("/").toTypedArray()[2].toLong()
+            }
+            .collect(Collectors.toList())
+        val resultLineIds = response.jsonPath().getList(".", StationResponse::class.java).stream()
+            .map { it.id }
+            .collect(Collectors.toList())
+        Assertions.assertThat(resultLineIds).containsAll(expectedLineIds)
+    }
 
     @DisplayName("지하철역을 제거한다.")
     @Test
