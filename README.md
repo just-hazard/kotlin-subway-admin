@@ -68,3 +68,7 @@ This project is [MIT](https://github.com/next-step/atdd-subway-admin/blob/master
 
 * 의문점
   * hibernate는 정말 linkedList 자료구조를 지원 안하는 걸까? 왜 not supported?
+
+* RunTime시 JPA DataSource Multi tenant 설정방법 학습
+  * dev database에 접근
+  * 서비스 레이어에서 dogpre와 catpre 스키마에 자유롭게 접근
