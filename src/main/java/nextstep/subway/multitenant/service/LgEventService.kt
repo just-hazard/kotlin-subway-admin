@@ -2,7 +2,6 @@ package nextstep.subway.multitenant.service
 
 import com.funnc.shop.api.event.lguplus.dto.LgEventCouponRequest
 import com.funnc.shop.api.event.lguplus.dto.LgEventCouponResponse
-import nextstep.subway.multitenant.TenantContext
 import nextstep.subway.multitenant.repositories.CompanyCouponRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
