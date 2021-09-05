@@ -15,6 +15,7 @@ class TestController(
 
     @PostMapping("/v1/lg/event")
     fun registerLgCoupon(@RequestBody request: LgEventCouponRequest) : ResponseEntity<LgEventCouponResponse> {
+        TenantContext.getCurrentTenant()
         return ResponseEntity.ok(lgEventService.registerLgCoupon(request))
     }
 }

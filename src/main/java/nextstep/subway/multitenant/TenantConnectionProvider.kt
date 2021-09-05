@@ -1,22 +1,19 @@
 package nextstep.subway.multitenant
 
+import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import java.sql.Connection
 import java.sql.SQLException
 import javax.sql.DataSource
 
 @Component
-class TenantConnectionProvider : MultiTenantConnectionProvider() {
-    private val DEFAULT_TENANT = "dogpre"
-    private var datasource: DataSource? = null
-
-    fun TenantConnectionProvider(dataSource: DataSource?) {
-        datasource = dataSource
-    }
+class TenantConnectionProvider(private val datasource: DataSource) : MultiTenantConnectionProvider {
+    private val DEFAULT_TENANT = "public"
 
     @Throws(SQLException::class)
     override fun getAnyConnection(): Connection {
-        return datasource!!.connection
+        return datasource.connection
     }
 
     @Throws(SQLException::class)
@@ -25,14 +22,16 @@ class TenantConnectionProvider : MultiTenantConnectionProvider() {
     }
 
     @Throws(SQLException::class)
-    override fun getConnection(tenantIdentifier: String?): Connection? {
-        val connection: Connection = anyConnection
-        connection.setSchema(tenantIdentifier)
+    override fun getConnection(tenantIdentifier: String): Connection {
+        logger.info("Get connection for tenant {}", tenantIdentifier)
+        val connection = anyConnection
+        connection.schema = tenantIdentifier
         return connection
     }
 
     @Throws(SQLException::class)
-    override fun releaseConnection(tenantIdentifier: String?, connection: Connection) {
+    override fun releaseConnection(tenantIdentifier: String, connection: Connection) {
+        logger.info("Release connection for tenant {}", tenantIdentifier)
         connection.schema = DEFAULT_TENANT
         releaseAnyConnection(connection)
     }
@@ -45,7 +44,11 @@ class TenantConnectionProvider : MultiTenantConnectionProvider() {
         return false
     }
 
-    override fun <T> unwrap(aClass: Class<T>?): T? {
+    override fun <T> unwrap(aClass: Class<T>): T? {
         return null
+    }
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(TenantConnectionProvider::class.java)
     }
 }

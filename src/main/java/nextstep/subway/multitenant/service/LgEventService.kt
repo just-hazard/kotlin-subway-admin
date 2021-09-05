@@ -11,14 +11,11 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class LgEventService(
     private val companyCouponRepository: CompanyCouponRepository,
-    private val tenantContext: TenantContext
 ) {
 
     @Transactional(readOnly = false)
     fun registerLgCoupon(request: LgEventCouponRequest): LgEventCouponResponse {
-        tenantContext.setTenant("dogpre")
         val companyDogCoupon = companyCouponRepository.findByCouponCode(request.couponCode)
-        tenantContext.setTenant("catpre")
         val companyCatCoupon = companyCouponRepository.findByCouponCode(request.couponCode)
 
         return LgEventCouponResponse()
