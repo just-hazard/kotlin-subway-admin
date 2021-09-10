@@ -14,6 +14,11 @@ class LgEventService(
 
     @Transactional(readOnly = false)
     fun registerLgCoupon(request: LgEventCouponRequest): LgEventCouponResponse {
+        // 시나리오
+        // request 코드를 통해 존재하는 코드인지 확인 ( 아닐경우 예외 )
+        // 쿠폰 유효기간이 지났는지 확인 ( 예외 )
+        // 사용된 쿠폰인지 확인 ( 예외 )
+        // 쿠폰 등록
         val companyDogCoupon = companyCouponRepository.findByCouponCode(request.couponCode)
         val companyCatCoupon = companyCouponRepository.findByCouponCode(request.couponCode)
 

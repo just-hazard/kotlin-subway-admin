@@ -168,6 +168,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
         private fun 노선에_구간_요청_확인(response: ExtractableResponse<Response>, httpStatus: HttpStatus) {
             assertThat(response.statusCode()).isEqualTo(httpStatus.value())
         }
+
         private fun 노선에_포함된_지하철_확인(response: ExtractableResponse<Response>, expectedStations: List<String>) {
             val stations = response.jsonPath().getList("stations", StationResponse::class.java)
                 .stream().map {
