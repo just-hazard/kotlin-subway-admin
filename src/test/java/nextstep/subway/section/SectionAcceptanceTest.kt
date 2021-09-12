@@ -143,6 +143,7 @@ class SectionAcceptanceTest : AcceptanceTest() {
 
         // then
         노선에_구간_요청_확인(response, HttpStatus.INTERNAL_SERVER_ERROR)
+        // then
     }
 
     companion object {
