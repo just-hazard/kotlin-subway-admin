@@ -18,7 +18,6 @@ import javax.persistence.EntityNotFoundException
 @Transactional(readOnly = true)
 class LineService(private val lineRepository: LineRepository,
         private val stationRepository: StationRepository) {
-
     @Transactional(readOnly = false)
     fun saveLine(request: LineRequest): LineResponse {
         val upStation = findStation(request.upStationId, ErrorMessage.NON_EXISTENT_UP_STATION)
